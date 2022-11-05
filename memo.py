@@ -1,6 +1,23 @@
 import mymisc as rt
 import time
 
+
+class Exec_sample:
+    def __init__(self):
+        pass
+    def exec(self,s):
+        print(s)
+        s = s.replace("$", "self.")
+        exec(s)
+
+    def dump(self):
+        #print(vars(self))
+        print(vars(self))
+
+
+    
+
+
 def pickup(org:int, range:list[int], name="")->int:
     msb=range[0]
     lsb=range[1]
@@ -27,15 +44,24 @@ def polling(exp:int, range:list[int]=[0,0], timeout:int=3, interval:float=10)->b
             time.sleep(interval)
             print(f"loop={loop}, x={x}")
     print("Illegal")
-        
             
 
 
 
 
 def main():
-    pickup(0xA,[2,1], name="STAT")
-    polling(0b11,range=[3,2],timeout=10, interval=0.5)
+    if(False):
+        pickup(0xA,[2,1], name="STAT")
+        polling(0b11,range=[3,2],timeout=10, interval=0.5)
+
+    if(True):
+        hoge= Exec_sample()
+        hoge.exec("$a=100")
+        hoge.exec("$b=200")
+        hoge.exec("$c = $a + $b")
+        hoge.exec("$a=$a*2")
+        hoge.dump()
+
 
 if __name__ == "__main__":
     main()
