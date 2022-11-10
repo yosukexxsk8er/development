@@ -48,11 +48,47 @@ def b2i(str, digit=1):
     """
     return int(str,2) 
 
+def s2i(str):
+    for x in [10,2,8,16]:
+        try:
+            return int(str,x)
+        except ValueError:
+            continue
+    return None
+
+def i2s(int:int,radix:int,digit:int=1)->str:
+    dict = {2:("b","0b"),  8:("o", "0o"),  10:("d", ""), 16:("X","0x")}
+    try:
+        dec, pre = dict[radix]
+    except KeyError:
+        print(f"Error Illegal radix(radix)")
+        return
+    fmt=f"0{digit}{dec}"
+    return pre + format(int,fmt)
+        
+            
+
 def main():
-    print(i2h(10,4))
-    print(i2b(10,4))
-    print(h2i("0xB"))
-    print(b2i("0b1100"))
+    if(False):
+        print(i2h(10,4))
+        print(i2b(10,4))
+        print(h2i("0xB"))
+        print(b2i("0b1100"))
+    if(False):
+        print(s2i("0xF"))
+        print(s2i("0b1111"))
+        print(s2i("0o17"))
+        print(s2i("15"))
+        print(s2i("0b1"))
+        print(s2i("0o1"))
+        print(s2i("1"))
+        print(s2i("0x1"))
+    if(True):
+        print(i2s(10,16,digit=3))
+        print(i2s(10,2,digit=8))
+        print(i2s(10,8, digit=3))
+        print(i2s(10,10, digit=0))
+        print(i2s(10,3, digit=0))
 
 if __name__ == "__main__":
     main()
