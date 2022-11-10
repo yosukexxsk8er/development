@@ -61,7 +61,7 @@ def i2s(int:int,radix:int,digit:int=1)->str:
     try:
         dec, pre = dict[radix]
     except KeyError:
-        print(f"Error Illegal radix(radix)")
+        print(f"Error. radix={radix} is illegal value")
         return
     fmt=f"0{digit}{dec}"
     return pre + format(int,fmt)
