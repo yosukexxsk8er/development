@@ -9,21 +9,23 @@ def main():
         html = markdown.markdown(md_text)
 
     #print(html)
-    style = Style("td")
     headline = Table()
 
     table = [["xxxx", "yyyy"], ["zzzz", "vvvv"]]
 
     html =  ""
-    html += style.dump()
+    html += style("td", border="solid 0px")
+    html += style("th", border="solid 0px")
+
+    html += headline.add_row(["aaaaa"])
     html += headline.start()
     html += headline.start_row()
-    html += headline.add_cell("aaaa", )
-    html += headline.add_cell("bbbb", )
+    html += headline.add_cell("aaaa", width="100px", header=True )
+    html += headline.add_cell("bbbb", width="auto")
     html += headline.end_row()
     html += headline.start_row()
-    html += headline.add_cell("cccc", )
-    html += headline.add_cell("dddd", )
+    html += headline.add_cell("cccc" , header=True)
+    html += headline.add_cell("dddd" )
     html += headline.end_row()
     html += headline.end()
 
@@ -35,22 +37,14 @@ def main():
 
 
 
-@dataclass
-class Style:
-    tag:str
-    border  :str="solid 1px"
-    bg      :str="#cdefff"
-    def dump(self):
-        indent = "    "
-        lines = []
-        lines.append(f'<style>')
-        lines.append(f'{indent * 1}{self.tag} {{')
-        lines.append(f'{indent * 2}border: {self.border};')
-        lines.append(f'{indent * 1}}}')
-        lines.append(f'</style>')
-        return "\n".join(lines) + "\n"
-
-
+def style(tag, border="sold 1px", bg="#cdefff", indent="    "):
+    htmls = []
+    htmls.append(f'<style>')
+    htmls.append(f'{indent * 1}{tag} {{')
+    htmls.append(f'{indent * 2}border: {border};')
+    htmls.append(f'{indent * 1}}}')
+    htmls.append(f'</style>')
+    return "\n".join(htmls) + "\n"
 
 class Table:
     def __init__(self, width="100%", border="sold 1px", bg="#cdefff"):
@@ -69,36 +63,49 @@ class Table:
             html += self.end_row()
         html += self.end()
         return html
+
+    def add_row(self,row):
+        html = self.start()
+        html += self.start_row()
+        for cell in row:
+            html += self.add_cell(cell)
+        html += self.end_row()
+        html += self.end()
+        return html
     
     def start(self, offset=0):
-        str  = f'{self.indent * self.offset}<table'
-        str += f' width="{self.width}"'
-        str += f' style="'
-        str += f' border: {self.border};'
-        str += f' background-color: {self.bg};'
-        str += f' "'
-        str += f'>'
+        html  = f'{self.indent * self.offset}<table'
+        html += f' width="{self.width}"'
+        html += f' style="'
+        html += f' border: {self.border};'
+        html += f' background-color: {self.bg};'
+        html += f' "'
+        html += f'>'
         self.offset += 1
-        return str + "\n"
+        return html + "\n"
 
     def start_row(self):
-        str  = f'{self.indent * self.offset}<tr>'
+        html  = f'{self.indent * self.offset}<tr>'
         self.offset += 1
-        return str + "\n"
+        return html + "\n"
 
     def end_row(self):
         self.offset -= 1
-        str  = f'{self.indent * self.offset}<tr>'
-        return str + "\n"
+        html  = f'{self.indent * self.offset}<tr>'
+        return html + "\n"
 
-    def add_cell(self, body="None"):
-        str  = f'{self.indent * self.offset}<td>{body}</td>'
-        return str + "\n"
+    def add_cell(self, body="None", width="auto", header=False):
+        if(header):
+            tag = "th"
+        else:
+            tag = "td"
+        html  = f'{self.indent * self.offset}<{tag} width="{width}">{body}</{tag}>'
+        return html + "\n"
 
     def end(self):
         self.offset -= 1
-        str  = f'{self.indent * self.offset}</table>'
-        return str + "\n"
+        html  = f'{self.indent * self.offset}</table>'
+        return html + "\n"
 
     
 
