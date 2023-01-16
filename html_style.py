@@ -18,7 +18,7 @@ def main():
     html += headline_table.start_row(style=StyleProperty(background="lightblue"))
     html += headline_table.add_cell("aaaa", width="100px", header=True )
     html += headline_table.add_cell("bbbb", width="auto")
-    html += headline_table.add_cell(["abc", "edf"], width="auto")
+    html += headline_table.add_cell(["abc", "edf"], width="auto", font_style=StyleProperty(color="red"))
     html += headline_table.end_row()
     html += headline_table.start_row()
     html += headline_table.add_cell("cccc" , header=True)
@@ -127,14 +127,14 @@ class StyleProperty:
     empty_cells:str=None     # 空セルの境界線	th要素、td要素	する
     caption_side:str=None    # 表タイトルの位置	caption要素	する
 
-    def has_valid(self):
+    def _has_valid(self):
         for value in vars(self).values():
             if(value is not None):
                 return True
         return False
 
     def add(self):
-        if(self.has_valid()):
+        if(self._has_valid()):
             style = ' style="'
             for key, value in vars(self).items():
                 if(value is not None):
@@ -190,7 +190,6 @@ class Table:
         if(style):
             html += style.add()
         html += f'>'
-        html = html.replace('style=" "', '')
         self.offset += 1
         return html + "\n"
 
@@ -204,7 +203,7 @@ class Table:
         html  = f'{self.indent * self.offset}<tr>'
         return html + "\n"
 
-    def add_cell(self, body="", width="auto", header=False, style=None):
+    def add_cell(self, body="", width="auto", header=False, style=None, font_style=None):
         if(header):
             tag = "th"
         else:
@@ -215,8 +214,14 @@ class Table:
             my_bodies = body
         html = ""
         for my_body in my_bodies:
-            html += f'{self.indent * self.offset}<{tag} {style.add() if(style) else ""}>{my_body}</{tag}>'
-        return html + "\n"
+            html += f'{self.indent * self.offset}<{tag}{style.add() if(style) else ""}>'
+            if(font_style):
+                html += f'<font {font_style.add()}>'
+            html += f'{my_body}'
+            if(font_style):
+                html += f'</font>'
+            html += f'</{tag}>\n'
+        return html
 
     def end(self):
         self.offset -= 1
