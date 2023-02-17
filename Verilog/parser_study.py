@@ -2,6 +2,7 @@ import os
 import re
 
 import logging
+import copy
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s - %(message)s")
 
@@ -9,58 +10,82 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(na
 #Pythonでカレントディレクトリをスクリプトのディレクトリに固定
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-KEYWORDS = {}
-KEYWORDS["port_definition"] = [
-    "input"
-    ,"output"
-    ,"inout"
-]
-KEYWORDS["local_definition"] = [
-    "wire"
-    ,"reg"
-    ,"logic"
-    ,"localparam"
-    ,"real"
-    ,"realtime"
-    ,"var"
-    ,"integer"
-    ,"genvar"
-]
+class Keywords:
+    DICT = {}
+    DICT["port_definition"] = [
+        "input"
+        ,"output"
+        ,"inout"
+    ]
+    DICT["local_definition"] = [
+        "wire"
+        ,"reg"
+        ,"logic"
+        ,"localparam"
+        ,"real"
+        ,"realtime"
+        ,"var"
+        ,"integer"
+        ,"genvar"
+    ]
 
-KEYWORDS["module_start"] = [
-    "module"
-    ,"primitive"
-]
+    DICT["module_start"] = [
+        "module"
+        ,"primitive"
+    ]
 
-KEYWORDS["module_end"] = [
-    "endmodule"
-    ,"endprimitive"
-]
+    DICT["module_end"] = [
+        "endmodule"
+        ,"endprimitive"
+    ]
 
 
-KEYWORDS["logic_start"] = [
-    "assign"
-    ,"always"
-]
+    DICT["logic_start"] = [
+        "assign"
+        ,"always"
+    ]
 
-KEYWORDS["others"] = [
-    "posedge"
-    ,"negedge"
-    ,"or"
-    ,"and"
-    ,"if"
-    ,"else"
-    ,"generate"
-    ,"for"
-    ,"initial"
-    ,"forever"
-]
+    DICT["others"] = [
+        "posedge"
+        ,"negedge"
+        ,"or"
+        ,"and"
+        ,"if"
+        ,"else"
+        ,"generate"
+        ,"for"
+        ,"initial"
+        ,"forever"
+    ]
+    DICT["begin_end"] = [ "begin", "end"]
 
-KEYWORDS["begin_end"] = [ "begin", "end"]
+    @classmethod
+    def is_no_keyword(cls,word):
+        for  key, str_list in cls.DICT.items():
+            if(word in str_list):
+                return False
+        return True
+
+
+
             
 class Words:
     def __init__(self,words):
-        self.words = words.copy()
+        # /* ~~ */ を削除
+        self.words = []
+        i=0
+        while(i<len(words)):
+            if(words[i]=="/*"):
+                i+=1
+                while(i<=len(words)):
+                    if(words[i]=="*/"):
+                        i+=1
+                        break
+                    else:
+                        i+=1
+            else:
+                self.words.append(words[i])
+                i+=1
         self.ptr = 0
 
     def now(self,advance=0):
@@ -76,7 +101,7 @@ class Words:
     def advance(self,num=1):
         self.ptr += num
         try:
-            logging.debug(f'adv :{self.words[self.ptr]}')
+            #logging.debug(f'adv :{self.words[self.ptr]}')
             return self.words[self.ptr]
         except IndexError:
             self._index_err()
@@ -87,7 +112,8 @@ class Words:
         skipped_words = []
         while(True):
             try:
-                if(self.now() == mark):
+                m = re.fullmatch(mark,self.now())
+                if(m):
                     self.ptr +=1
                     return "".join(skipped_words)
                 else:
@@ -119,11 +145,34 @@ class Words:
                     return True
         else:
             return False
+
+    def skip_nest(self, smark, emark):
+        depth = 0
+        while(self.does_reach_to_end() is False):
+            if(re.fullmatch(smark,self.now())):
+                depth += 1
+                self.advance()
+                continue
+            if(re.fullmatch(emark,self.now())):
+                depth -= 1
+                self.advance()
+                if(depth==0):
+                    break
+                else:
+                    continue
+            self.advance()
+        
+
                 
 
 
     def _index_err(self):
         print(f'Over index (ptr:{self.ptr}, Len:{len(self.words)})')
+
+    def does_reach_to_end(self):
+        return self.ptr>=len(self.words)
+
+            
             
 
 
@@ -134,10 +183,10 @@ class Port():
         self.msb = 0
         self.lsb = 0
         self.value = ""
-        if(words.now() in KEYWORDS["port_definition"]):
+        if(words.now() in Keywords.DICT["port_definition"]):
             self.dir = words.now()
             #output reg や input wire 対策
-            while(words.advance() in KEYWORDS["local_definition"]):
+            while(words.advance() in Keywords.DICT["local_definition"]):
                 continue
             m = re.fullmatch(r"\[(?P<msb>[^:]+):(?P<lsb>[^\]]+)\]", words.now())
             if(m):
@@ -155,31 +204,30 @@ class Port():
                 
 class Instance:
     def __init__(self,words:Words):
+        logging.debug(f'Instance:{words.now()}')
         self.module_name  = None
         self.instance_name = None
-        not_instance = False
-        word_1st = words.now()
-        try:
-            word_2nd = words.words[words.ptr+1]
-        except IndexError:
-            return
-        for word in [word_1st, word_2nd]:
-            if(re.search(r"[^\w]",word)):
-                not_instance = True
-                break
-            else:
-                for  key, str_list in KEYWORDS.items():
-                    if(word in str_list):
-                        not_instance = True
-                        break
-                if(not_instance):
-                    break
-        if(not_instance is False):
-            logging.debug(f'Instance : {word_1st} {word_2nd}')
-            self.module_name   = word_1st
-            self.instance_name = word_2nd
-            words.advance(num=2)
-        return
+        save_ptr = words.ptr
+        if(Keywords.is_no_keyword(words.now())):
+            m = re.fullmatch(r"\w+", words.now())
+            if(m):
+                module_name = words.now()
+                words.advance()
+                if(words.now()=="#("):
+                    words.skip_nest(smark=r"#?\(", emark=r"\)")
+                    m = re.fullmatch("\w+", words.now())
+                if(Keywords.is_no_keyword(words.now())):
+                    m = re.fullmatch(r"\w+", words.now())
+                    if(m):
+                        instance_name = words.now()
+                        self.module_name   = module_name
+                        self.instance_name = instance_name
+                        words.advance()
+                        return
+        #見つからなとき(ここまでにreturn がCallされなかったとき)Pointerを戻す
+        words.ptr = save_ptr
+
+
 
     def exist(self):
         if(self.module_name is None):
@@ -202,27 +250,33 @@ class Local(Local_base):
         self.name = name
 
 class Locals(Local_base):
-    def __init__(self,words:Words,type):
+    def __init__(self,words:Words,type, end_mark=r";"):
         self.names = []
         super().__init__(type=type, msb=0, lsb=0)
         if(words.now() == type):
             self.dir = words.now()
             #output reg や input wire 対策
-            while(words.advance() in KEYWORDS["local_definition"]):
+            while(words.advance() in Keywords.DICT["local_definition"]):
                 continue
             m = re.fullmatch(r"\[(?P<msb>[^:]+):(?P<lsb>[^\]]+)\]", words.now())
             if(m):
                 self.msb = m.group("msb")
                 self.lsb = m.group("lsb")
                 words.advance()
-            self.names.append(words.now(advance=1))
+            name = words.now(advance=1)
+            # memory宣言 (reg [7:0] mem[1023:0]))かどうかのチェック
+            m = re.fullmatch(r"\[(?P<msb>[^:]+):(?P<lsb>[^\]]+)\]", words.now())
+            if(m):
+                name += f'[{m.group("msb")}:{m.group("lsb")}]'
+                words.advance()
+            self.names.append(name)
             while(True):
                 matched_mark = words.check(r"[,;=]",advance=0)
                 if(matched_mark==";"):
                     break
                 elif(matched_mark=="="):
                     words.advance()
-                    self.value = words.skip(mark=";")
+                    self.value = words.skip(mark=end_mark)
                     break
                 else:
                     self.names.append(words.advance())
@@ -235,18 +289,90 @@ class Locals(Local_base):
 
             
 
-            
 
 
 class Module:
     SIG_TYPE_LIST= ["ports", "regs", "wires", "genvars", "localparams", "parameters"]
-    def __init__(self):
-        self.module = None
+    def __init__(self,words:Words):
+        self.name = None
         self.signals_dict = {}
         for sig_type in self.SIG_TYPE_LIST:
             self.signals_dict[sig_type]        = []
         #self.signals["instances"]    = []
         self.instances               = []
+
+        
+        #モジュール名、(paramter、)を取得
+        while(words.does_reach_to_end() is False):
+            if(words.now() in Keywords.DICT["module_start"]):
+                self.name = words.advance()
+                words.advance()
+                if(words.now()=="#("):
+                    type="parameter"
+                    while(True):
+                        words.advance()
+                        locals = Locals(words, type=type, end_mark=r"[,\)]").expand()
+                        if(len(locals)!=0):
+                            any_detected = True
+                            self.signals_dict[type+"s"].extend(locals)
+                        if(words.now()=="("):
+                            break
+                    words.check(r"\(",advance=1)
+                    break
+                elif(words.now()=="("):
+                    words.advance()
+                    break
+                else:
+                    print(f'Illegal format')
+                    raise ValueError
+            else:
+                words.advance()
+        #ポートを取得
+        while(words.does_reach_to_end() is False):
+            port = Port(words)
+            if(port.name is not None):
+                self.signals_dict["ports"].append(port)
+            else:
+                break
+        #ローカル信号、インスタンスを取得、モジュール(orプリミティブ)の終了を検出
+        while(words.does_reach_to_end() is False):
+            any_detected = False
+            for type in ["reg", "wire", "genvar", "localparam", "parameter"]:
+                locals = Locals(words, type=type).expand()
+                if(len(locals)!=0):
+                    any_detected = True
+                    self.signals_dict[type+"s"].extend(locals)
+                    break
+            if(any_detected):
+                continue
+            skipped = words.skip_from_begin_to_end()
+            if(skipped):
+                continue
+            instance = Instance(words)
+            if(instance.exist()):
+                self.instances.append(instance)
+                continue
+            if(words.now() in Keywords.DICT["module_end"]):
+                break
+            words.advance()
+
+    def instance_info(self,how_to_specify, name):
+        list = []
+        if(how_to_specify=="module_name"):
+            for instance in self.instances:
+                m = re.fullmatch(name, instance.module_name)
+                if(m):
+                    list.append(m.group())
+        elif(how_to_specify=="instance_name"):
+            for instance in self.instances:
+                m = re.fullmatch(name, instance.instance_name)
+                if(m):
+                    list.append(m.group())
+        else:
+            print(f'Allable value of how_specify are "module_name" or "instance_name".')
+            raise ValueError
+        return list
+
 
     def dump(self):
         for type in self.SIG_TYPE_LIST:
@@ -261,19 +387,62 @@ class Module:
                 list.append(signal.name)
                 list.append(signal.value)
                 print("\t".join(list))
+        for instance in self.instances:
+            list = []
+            list.append(instance.instance_name)
+            list.append(instance.module_name)
+            print("\t".join(list))
 
 
-            
 
+class Modules:
+    def __init__(self):
+        self.modules = []
+    
+    def add(self, module:Module):
+        self.modules.append(module)
+
+    def pickup(self,module_name)-> Module:
+        list = []
+        for module in self.modules:
+            m = re.fullmatch(module_name, module.name)
+            if(m):
+                list.append(module)
+        return list
+
+
+    def disp_tree(self, top_module_name):
+        self.depth = 0
+        print(f'###### Start to display a tree. #############')
+        module_list = self.pickup(top_module_name)
+        for module in module_list:
+            for instance in module.instances:
+                self.dive(instance=instance, func=self.print_instance)
+
+    def dive (self, instance:Instance, func):
+        func(instance=instance)
+        self.depth+=1
+        module_name = instance.module_name
+        for module in self.pickup(module_name):
+            for instance in module.instances:
+                self.dive(instance=instance,func=func)
+        self.depth-=1
+
+    def print_instance(self,instance:Instance)->None:
+        instance_name = instance.instance_name
+        module_name   = instance.module_name
+        indent_mark = "\t"
+        print(f'{indent_mark * self.depth}{instance_name} ({module_name})')
+        
 
 
 
 def main():
     dir=r"C:\Work\GitLocals\development\core_usb_host\src_v"
 
+    modules = Modules()
     for filename in os.listdir(dir):
         if(re.fullmatch(r"\w+\.v", filename)):
-            filename="usbh_sie.v"
             with open(os.path.join("files", dir + "/" + filename), 'r') as f:
                 print(f'Reading...{filename}')
                 words_str = ""
@@ -284,8 +453,8 @@ def main():
                         continue
                     words_str += line
                 
-                words_str = re.sub(r"([^\w])", r" \1 ", words_str)
-                #words_str = re.sub(r"\s*([\+\-\*/%^\&\|\'\?])\s*",r"\1",words_str)
+                #words_str = re.sub(r"([^\w])", r" \1 ", words_str)
+                words_str = re.sub(r"([\(\);,])", r" \1 ", words_str)
                 words_str = re.sub(r"\s*([\(\)])\s*",r" \1 ",words_str)
 
                 words_str = re.sub(r"\[\s*(\d+)\s*:\s*(\d+)\s*\]", r"[\1:\2]", words_str)
@@ -303,42 +472,16 @@ def main():
                 _ = re.split(r"\s+",words_str)
                 _ = [a for a in _ if a != '']
                 words = Words(_)
+                module = Module(words)
+                if(module.name is None):
+                    print(f'{filename} was not a module nor primitive.')
+                else:
+                    modules.add(module)
 
-                module = Module()
-                if(words.now() in KEYWORDS["module_start"]):
-                    module.name = words.advance()
-                    if(words.advance()=="#("):
-                        words.skip(")")
-                    words.check(r"\(",advance=1)
-                    while(True):
-                        port = Port(words)
-                        if(port.name is not None):
-                            module.signals_dict["ports"].append(port)
-                        else:
-                            break
 
-                    while(True):
-                        any_detected = False
-                        for type in ["reg", "wire", "genvar", "localparam", "parameter"]:
-                            locals = Locals(words, type=type).expand()
-                            if(len(locals)!=0):
-                                any_detected = True
-                                module.signals_dict[type+"s"].extend(locals)
-                                break
-                        if(any_detected):
-                            continue
-                        skipped = words.skip_from_begin_to_end()
-                        if(skipped):
-                            continue
-                        instance = Instance(words)
-                        if(instance.exist()):
-                            module.instances.append(instance)
-                            continue
-                        if(words.now() in KEYWORDS["module_end"]):
-                            break
-                        words.advance()
 
                 pass
+
 
                 
 
@@ -349,8 +492,9 @@ def main():
                 #
                 #print('"\n"'.join(words.words))
                 module.dump()
-            break
-    pass
+    #print(modules.pickup(r"\w+crc\w+"))
+    modules.disp_tree("usbh_host")
+
 
 
 if __name__ == "__main__":
