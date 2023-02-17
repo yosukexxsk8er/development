@@ -393,7 +393,14 @@ class Module:
             list.append(instance.module_name)
             print("\t".join(list))
 
-
+    def get_ports(self, name:str, direction=r".*")->list[Port]:
+        list = []
+        for port  in self.signals_dict["ports"]:
+            m_name = re.fullmatch(name, port.name)
+            m_dir  = re.fullmatch(direction, port.dir)
+            if(m_name and m_dir):
+                list.append(port)
+        return list
 
 class Modules:
     def __init__(self):
@@ -402,7 +409,7 @@ class Modules:
     def add(self, module:Module):
         self.modules.append(module)
 
-    def pickup(self,module_name)-> Module:
+    def get_modules(self,module_name)-> Module:
         list = []
         for module in self.modules:
             m = re.fullmatch(module_name, module.name)
@@ -414,7 +421,7 @@ class Modules:
     def disp_tree(self, top_module_name):
         self.depth = 0
         print(f'###### Start to display a tree. #############')
-        module_list = self.pickup(top_module_name)
+        module_list = self.get_modules(top_module_name)
         for module in module_list:
             for instance in module.instances:
                 self.dive(instance=instance, func=self.print_instance)
@@ -423,7 +430,7 @@ class Modules:
         func(instance=instance)
         self.depth+=1
         module_name = instance.module_name
-        for module in self.pickup(module_name):
+        for module in self.get_modules(module_name):
             for instance in module.instances:
                 self.dive(instance=instance,func=func)
         self.depth-=1
@@ -433,6 +440,23 @@ class Modules:
         module_name   = instance.module_name
         indent_mark = "\t"
         print(f'{indent_mark * self.depth}{instance_name} ({module_name})')
+
+    def search_instance(self, top_module_name, instance_name):
+        self.instance_path_list = []
+        self.depth = 0
+        print(f'###### Start to display a tree to {instance_name}. #############')
+        module_list = self.get_modules(top_module_name)
+        for module in module_list:
+            for instance in module.instances:
+                self.dive(instance=instance, func=self.aaaa)
+    
+    def aaaa (self, instance:Instance, target_instance_name:str, cur_route:list[str]):
+        m = re.fullmatch(target_instance_name,instance.instance_name)
+        if(m):
+            cur_route.append(instance.instance_name)
+            print(".".join(cur_route))
+
+
         
 
 
@@ -492,8 +516,19 @@ def main():
                 #
                 #print('"\n"'.join(words.words))
                 module.dump()
-    #print(modules.pickup(r"\w+crc\w+"))
+    #print(modules.get_modules(r"\w+crc\w+"))
     modules.disp_tree("usbh_host")
+
+    modules.get_modules("usbh_host")[0].get_ports("cfg_araddr_i")[0].dump()
+
+    for module in modules.modules:
+        ports = []
+        ports = module.get_ports("crc_i")
+        ports = module.get_ports("clk_i")
+        ports = module.get_ports("clk_i", direction="input")
+        ports = module.get_ports("clk_i", direction="output")
+
+    module.serch_instance("u_crc5")
 
 
 
