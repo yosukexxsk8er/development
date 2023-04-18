@@ -1,0 +1,253 @@
+{
+  "Activities":[
+    "Activities (14).csv",
+    "Activities (13).csv",
+    "Activities (12).csv"
+  ],
+  "Parts":[
+    {
+      "Name": "年間走行距離",
+      "Model": "-",
+      "StartDate": "2018/04/01",
+      "ChangeDate": [
+       "2019/04/01"
+      ,"2020/04/01"
+      ,"2021/04/01"
+      ,"2022/04/01"
+      ,"2023/04/01"
+      ],
+      "EndDate": null,
+      "Memo":"これはメモです"
+    },
+    {
+      "Name": "ハブ グリスアップ",
+      "Model": "ID360",
+      "StartDate": "2019/09/27",
+      "ChangeDate": [
+      "2020/08/08"
+      ,"2022/01/15"
+      ,"2022/08/10"
+      ,"2023/01/12"
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "シーラント交換(前)",
+      "Model": "-",
+      "StartDate": "2020/07/12",
+      "ChangeDate": [
+        "2021/01/10"
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "シーラント交換(後)",
+      "Model": "-",
+      "StartDate": "2020/07/12",
+      "ChangeDate":[
+        "2021/01/10"
+        ,"2022/08/13"
+        ,"2023/02/01"
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "Yksion 1(前)",
+      "Model": "Yksion",
+      "StartDate": "2019/09/28",
+      "ChangeDate": [],
+      "EndDate": "2021/01/10"
+    },
+    {
+      "Name": "Yksion 2(後)",
+      "Model": "Yksion",
+      "StartDate": "2019/09/28",
+      "ChangeDate": [],
+      "EndDate": "2021/01/10"
+    },
+    {
+      "Name": "Yksion 1(後)",
+      "Model": "Yksion",
+      "StartDate": "2021/01/10",
+      "ChangeDate": [],
+      "EndDate": "2021/09/25",
+      "Memo": "前タイヤを後ろへローテーション。天竜川でスローパンク発生後に交換(？)"
+    },
+    {
+      "Name": "Yksion 3(前)",
+      "Model": "Yksion",
+      "StartDate": "2021/01/10",
+      "EndDate": "2021/04/11",
+      "ChangeDate":[],
+      "Memo": "縁石衝突パンク"
+    },
+    {
+      "Name": "Yksion 4(前)",
+      "Model": "Yksion",
+      "StartDate": "2021/10/08",
+      "ChangeDate":[],
+      "EndDate": "2022/09/18",
+      "Memo":"ビート劣化。茅野手前でパンク"
+    },
+    {
+      "Name": "Yksion 5(後)",
+      "Model": "Yksion",
+      "StartDate": "2021/09/25",
+      "ChangeDate": [],
+      "EndDate": "2022/08/10"
+    },
+    {
+      "Name": "Yksion 6(後)",
+      "Model": "Yksion",
+      "StartDate": "2022/08/10",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "IRC Tire 1(前)",
+      "Model": "IRC",
+      "StartDate": "2022/09/20",
+      "ChangeDate":[
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "チェーン1",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2018/08/24",
+      "ChangeDate": [
+      ],
+      "EndDate":"2021/09/24"
+    },
+    {
+      "Name": "チェーン2",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2021/09/24",
+      "ChangeDate": [
+      ],
+      "EndDate":"2023/03/31"
+    },
+    {
+      "Name": "チェーン2(脱脂)",
+      "Positon": null,
+      "Type": "脱脂",
+      "Model": null,
+      "StartDate": "2021/09/24",
+      "ChangeDate": [
+        "2022/08/15",
+        "2023/02/01"
+      ],
+      "EndDate": "2023/03/31"
+    },
+    {
+      "Name": "チェーン3",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2023/03/31",
+      "ChangeDate": [
+      ],
+      "EndDate":null
+    },
+    {
+      "Name": "チェーン3(脱脂)",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2023/03/31",
+      "ChangeDate": [
+      ],
+      "EndDate":null
+    },
+    {
+      "Name": "シフトワイヤー(前) 交換",
+      "Model": null,
+      "StartDate": "2020/05/10",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "シフトワイヤー(後) 交換",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2020/05/10",
+      "ChangeDate":[
+        "2023/02/01"
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "シフトアウターケーブル交換",
+      "Model": null,
+      "StartDate": "2020/05/10",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "ブレーキワイヤー前 交換",
+      "Model": null,
+      "StartDate": "2020/05/10",
+      "ChangeDate": [
+        "2023/02/01"
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "ブレーキワイヤー後 交換",
+      "Model": null,
+      "StartDate": "2020/05/10",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "ブレーキアウター",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2020/05/10",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "クランクシャフト",
+      "Positon": null,
+      "Type": "グリスアップ",
+      "Model": null,
+      "StartDate": "2022/08/12",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "リアライト",
+      "Positon": null,
+      "Type": "電池交換",
+      "Model": "CatEye(Auto)",
+      "StartDate": "2020/08/23",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "ガーミンセンサー",
+      "Positon": "速度",
+      "Type": "電池交換",
+      "Model": null,
+      "StartDate": "2020/08/23",
+      "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "タイル",
+      "Positon": null,
+      "Type": "電池交換",
+      "Model": null,
+      "StartDate": "2023/03/21",
+      "ChangeDate": [],
+      "EndDate": null
+    }
+  ]
+}
