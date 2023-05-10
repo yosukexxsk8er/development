@@ -1,10 +1,11 @@
 import os
+import argparse
 import re
-
 import logging
+
 import copy
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s - %(message)s")
+#logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s:%(name)s - %(message)s")
 
 
 #Pythonでカレントディレクトリをスクリプトのディレクトリに固定
@@ -70,9 +71,27 @@ class Keywords:
 
             
 class Words:
-    def __init__(self,words):
+    def __init__(self,words, logger=None, log_level=logging.INFO):
         # /* ~~ */ を削除
         self.words = []
+        self.logger = None
+        self.printed = False
+        if(logger is None):
+            #Logger設定
+            self.logger = logging.getLogger('my_logger')
+            if(not self.logger.hasHandlers()):
+                # ログのレベルを設定
+                self.logger.setLevel(log_level)
+                # ログのフォーマット設定
+                formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s [Module:%(module)s][Func:%(funcName)s]')
+                # ハンドラの作成とフォーマットの設定
+                stream_handler = logging.StreamHandler()
+                stream_handler.setFormatter(formatter)
+                # ロガーにハンドラを追加
+                self.logger.addHandler(stream_handler)
+        else:
+            self.logger = logger
+
         i=0
         while(i<len(words)):
             if(words[i]=="/*"):
@@ -92,7 +111,9 @@ class Words:
         try:
             now = self.words[self.ptr]
             self.ptr+=advance
-            #logging.debug(f'now :{now}')
+            if(self.printed is False):
+                self.logger.debug(f'"{now}"\t(ptr={self.ptr})')
+            self.printed = True
             return now
         except IndexError:
             self._index_err()
@@ -101,7 +122,8 @@ class Words:
     def advance(self,num=1):
         self.ptr += num
         try:
-            #logging.debug(f'adv :{self.words[self.ptr]}')
+            self.logger.debug(f'"{self.words[self.ptr]}"\t(ptr={self.ptr},incriment={num})')
+            self.printed=True
             return self.words[self.ptr]
         except IndexError:
             self._index_err()
@@ -110,18 +132,17 @@ class Words:
     def skip(self,mark):
         self.save_ptr = self.ptr
         skipped_words = []
-        while(True):
-            try:
-                m = re.fullmatch(mark,self.now())
-                if(m):
-                    self.ptr +=1
-                    return "".join(skipped_words)
-                else:
-                    skipped_words.append(self.now())
-                    self.ptr +=1
-            except IndexError:
-                print(f'[Error] makr "{mark}" was not detect from {self.save_ptr} to {self.ptr}')
-                raise ValueError
+        while(self.does_reach_to_end() is False):
+            if(re.fullmatch(mark,self.now())):
+                self.ptr +=1
+                self.printed=False
+                return "".join(skipped_words)
+            else:
+                skipped_words.append(self.now())
+                self.ptr +=1
+                self.printed=False
+        print(f'[Error] makr "{mark}" was not detect from {self.save_ptr} to {self.ptr}')
+        raise ValueError
     
     def check(self,mark,advance=0):
         if(not re.fullmatch(mark,self.now())):
@@ -129,6 +150,11 @@ class Words:
             raise ValueError
         now = self.now()
         self.ptr+=advance
+        if(advance==0):
+            pass
+        else:
+            self.logger.debug(f'"{self.words[self.ptr]}"\t(ptr={self.ptr},inc={advance})')
+            self.printed=True
         return now
 
     def skip_from_begin_to_end(self):
@@ -173,17 +199,41 @@ class Words:
         return self.ptr>=len(self.words)
 
             
+class Port_base():
+    def __init__(self, dir, msb, lsb):
+        self.dir  = dir
+        self.msb  = msb
+        self.lsb  = lsb
             
+class Port(Port_base):
+    def __init__(self, name, dir, msb, lsb):
+        super().__init__(dir=dir, msb=msb, lsb=lsb)
+        self.name = name
 
 
-class Port():
-    def __init__(self,words:Words):
-        self.dir = None
-        self.name = None
-        self.msb = 0
-        self.lsb = 0
-        self.value = ""
+class Ports(Port_base):
+    def __init__(self,words:Words, search_in_portlist=False, logger=None, log_level=logging.INFO):
+        self.names = []
+        super().__init__(dir=None, msb=0, lsb=0)
+        self.logger = None
+        if(logger is None):
+            #Logger設定
+            self.logger = logging.getLogger('my_logger')
+            if(not self.logger.hasHandlers()):
+                # ログのレベルを設定
+                self.logger.setLevel(log_level)
+                # ログのフォーマット設定
+                formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s [Module:%(module)s][Func:%(funcName)s]')
+                # ハンドラの作成とフォーマットの設定
+                stream_handler = logging.StreamHandler()
+                stream_handler.setFormatter(formatter)
+                # ロガーにハンドラを追加
+                self.logger.addHandler(stream_handler)
+        else:
+            self.logger = logger
+        self.logger.debug("Start    to check if this word is port.")
         if(words.now() in Keywords.DICT["port_definition"]):
+            self.logger.debug("Detected the word associated with the port.")
             self.dir = words.now()
             #output reg や input wire 対策
             while(words.advance() in Keywords.DICT["local_definition"]):
@@ -193,32 +243,51 @@ class Port():
                 self.msb = m.group("msb")
                 self.lsb = m.group("lsb")
                 words.advance()
-            self.name = words.now(advance=1)
-            matched_mark = words.check(r"[,\)]",advance=1)
-            if(matched_mark==")"):
-                words.check(";", advance=1)
+            self.names.append(words.now())
+            words.advance()
+            if(search_in_portlist):
+                matched_mark = words.check(r"[,\)]",advance=1)
+                if(matched_mark==")"):
+                    words.check(";", advance=1)
+            else:
+                while(True):
+                    matched_mark = words.check(r"[,;]",advance=0)
+                    if(matched_mark==";"):
+                        break
+                    if(matched_mark==","):
+                        words.advance()
+                        self.names.append(words.now())
+                        words.advance()
+        self.logger.debug("Finished checking if this word is PORT.")
+
+    def expand(self):
+        #name_list を展開
+        ports = []
+        for name in self.names:
+            ports.append(Port(name=name, dir=self.dir, msb=self.msb, lsb=self.lsb))
+        return ports
+
     def dump(self):
         list = [self.dir, f'[{self.msb}:{self.lsb}]', self.name]
         print("\t".join(list))
-
                 
+
 class Instance:
     def __init__(self,words:Words):
-        logging.debug(f'Instance:{words.now()}')
+        #logging.debug(f'Instance:{words.now()}')
         self.module_name  = None
         self.instance_name = None
         save_ptr = words.ptr
+        # 予約語でないない単語のあとに、 再び、予約語でない単語がきたら、それらはモジュール名＋インスtナス名とする。
+        # 途中のパラメータ継承(#(.XXX)) の考慮も必要。
         if(Keywords.is_no_keyword(words.now())):
-            m = re.fullmatch(r"\w+", words.now())
-            if(m):
+            if(re.fullmatch(r"\w+", words.now())):
                 module_name = words.now()
                 words.advance()
                 if(words.now()=="#("):
                     words.skip_nest(smark=r"#?\(", emark=r"\)")
-                    m = re.fullmatch("\w+", words.now())
                 if(Keywords.is_no_keyword(words.now())):
-                    m = re.fullmatch(r"\w+", words.now())
-                    if(m):
+                    if(re.fullmatch(r"\w+", words.now())):
                         instance_name = words.now()
                         self.module_name   = module_name
                         self.instance_name = instance_name
@@ -226,8 +295,6 @@ class Instance:
                         return
         #見つからなとき(ここまでにreturn がCallされなかったとき)Pointerを戻す
         words.ptr = save_ptr
-
-
 
     def exist(self):
         if(self.module_name is None):
@@ -250,10 +317,27 @@ class Local(Local_base):
         self.name = name
 
 class Locals(Local_base):
-    def __init__(self,words:Words,type, end_mark=r";"):
+    def __init__(self,words:Words,type, end_mark=r";", logger=None, log_level=logging.INFO):
+        self.logger = None
+        if(logger is None):
+            #Logger設定
+            self.logger = logging.getLogger('my_logger')
+            if(not self.logger.hasHandlers()):
+                # ログのレベルを設定
+                self.logger.setLevel(log_level)
+                # ログのフォーマット設定
+                formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s [Module:%(module)s][Func:%(funcName)s]')
+                # ハンドラの作成とフォーマットの設定
+                stream_handler = logging.StreamHandler()
+                stream_handler.setFormatter(formatter)
+                # ロガーにハンドラを追加
+                self.logger.addHandler(stream_handler)
+        else:
+            self.logger = logger
         self.names = []
         super().__init__(type=type, msb=0, lsb=0)
         if(words.now() == type):
+            self.logger.debug(f'Match the word to "{type}"')
             self.dir = words.now()
             #output reg や input wire 対策
             while(words.advance() in Keywords.DICT["local_definition"]):
@@ -269,6 +353,7 @@ class Locals(Local_base):
             if(m):
                 name += f'[{m.group("msb")}:{m.group("lsb")}]'
                 words.advance()
+            self.logger.debug(f'"{name}" was stored as {type}')
             self.names.append(name)
             while(True):
                 matched_mark = words.check(r"[,;=]",advance=0)
@@ -278,8 +363,13 @@ class Locals(Local_base):
                     words.advance()
                     self.value = words.skip(mark=end_mark)
                     break
+                elif(matched_mark==","):
+                    words.advance()
+                    self.names.append(words.now())
+                    words.advance()
                 else:
-                    self.names.append(words.advance())
+                    raise ValueError("Illegal.")
+
     def expand(self):
         #name_list を展開
         locals = []
@@ -293,21 +383,40 @@ class Locals(Local_base):
 
 class Module:
     SIG_TYPE_LIST= ["ports", "regs", "wires", "genvars", "localparams", "parameters"]
-    def __init__(self,words:Words):
+    def __init__(self,words:Words, logger=None, log_level=logging.INFO):
         self.name = None
         self.signals_dict = {}
         for sig_type in self.SIG_TYPE_LIST:
             self.signals_dict[sig_type]        = []
         #self.signals["instances"]    = []
         self.instances               = []
+        self.modules = []
+        self.logger = None
+        if(logger is None):
+            #Logger設定
+            self.logger = logging.getLogger('my_logger')
+            if(not self.logger.hasHandlers()):
+                # ログのレベルを設定
+                self.logger.setLevel(log_level)
+                # ログのフォーマット設定
+                formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s [Module:%(module)s][Func:%(funcName)s]')
+                # ハンドラの作成とフォーマットの設定
+                stream_handler = logging.StreamHandler()
+                stream_handler.setFormatter(formatter)
+                # ロガーにハンドラを追加
+                self.logger.addHandler(stream_handler)
+        else:
+            self.logger = logger
 
-        
+        self.logger.info("Start to analize a verilog...")
+
+
         #モジュール名、(paramter、)を取得
         while(words.does_reach_to_end() is False):
             if(words.now() in Keywords.DICT["module_start"]):
                 self.name = words.advance()
                 words.advance()
-                if(words.now()=="#("):
+                if(words.now()=="#("): #ポート定義の前にparameter定義があった場合の処理
                     type="parameter"
                     while(True):
                         words.advance()
@@ -327,22 +436,32 @@ class Module:
                     raise ValueError
             else:
                 words.advance()
-        #ポートを取得
+        #ポートリストの範囲に対し、サーチする部分
         while(words.does_reach_to_end() is False):
-            port = Port(words)
-            if(port.name is not None):
-                self.signals_dict["ports"].append(port)
-            else:
+            ports = Ports(words, search_in_portlist=True).expand()
+            if(len(ports)!=0):
+                any_detected = True
+                self.signals_dict["ports"].extend(ports)
+            if(words.now()==";"):
+                words.advance()
                 break
-        #ローカル信号、インスタンスを取得、モジュール(orプリミティブ)の終了を検出
+            words.advance()
         while(words.does_reach_to_end() is False):
+            #ポートリスト宣言のあとに入出力信号の詳細を宣言した信号を引っ掛ける
+            ports = Ports(words, search_in_portlist=False).expand()
+            if(len(ports)!=0):
+                any_detected = True
+                self.signals_dict["ports"].extend(ports)
+            #ローカル信号、インスタンスを取得、モジュール(orプリミティブ)の終了を検出
             any_detected = False
+            self.logger.debug("Start    to Check the word if it is local signals")
             for type in ["reg", "wire", "genvar", "localparam", "parameter"]:
                 locals = Locals(words, type=type).expand()
                 if(len(locals)!=0):
                     any_detected = True
                     self.signals_dict[type+"s"].extend(locals)
                     break
+            self.logger.debug("Finished checking the word if it is local signals")
             if(any_detected):
                 continue
             skipped = words.skip_from_begin_to_end()
@@ -385,8 +504,9 @@ class Module:
                 list.append(str(signal.msb))
                 list.append(str(signal.lsb))
                 list.append(signal.name)
-                list.append(signal.value)
-                print("\t".join(list))
+                if(type!="ports"):
+                    list.append(signal.value)
+                print("\t|".join(list))
         for instance in self.instances:
             list = []
             list.append(instance.instance_name)
@@ -402,9 +522,25 @@ class Module:
                 list.append(port)
         return list
 
+
 class Modules:
-    def __init__(self):
+    def __init__(self, logger=None, log_level=logging.INFO):
         self.modules = []
+        if(logger is None):
+            #Logger設定
+            self.logger = logging.getLogger('my_logger')
+            if(not self.logger.hasHandlers()):
+                # ログのレベルを設定
+                self.logger.setLevel(log_level)
+                # ログのフォーマット設定
+                formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s [Module:%(module)s][Func:%(funcName)s]')
+                # ハンドラの作成とフォーマットの設定
+                stream_handler = logging.StreamHandler()
+                stream_handler.setFormatter(formatter)
+                # ロガーにハンドラを追加
+                self.logger.addHandler(stream_handler)
+        else:
+            self.logger = logger
     
     def add(self, module:Module):
         self.modules.append(module)
@@ -459,15 +595,50 @@ class Modules:
 
         
 
-
-
 def main():
-    dir=r"C:\Work\GitLocals\development\core_usb_host\src_v"
+    # 引数の設定
+    parser = argparse.ArgumentParser(description='Verilogを解析するプログラム')
+    parser.add_argument('dir', type=str, help='Verilogが置かれたディレクトリ名')
+    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO', help='ログレベルを指定します')
+
+
+
+    # 引数の解析
+    args = parser.parse_args()
+
+    #dir=r"C:\Work\GitLocals\development\core_usb_host\src_v"
+    dir=args.dir
+    log_level = getattr(logging, args.log_level)
+
+    #Logger設定
+    logger = logging.getLogger('my_logger')
+    # ログのレベルを設定
+    logger.setLevel(log_level)
+
+    # ログのフォーマット設定
+    formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s\t\t[Module:%(module)s][Func:%(funcName)s]')
+
+
+    # ハンドラの作成とフォーマットの設定
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+
+    # ロガーにハンドラを追加
+    logger.addHandler(stream_handler)
+
+    # ログ出力
+    logger.debug('This is a debug message')
+    logger.info('This is an info message')
+    logger.warning('This is a warning message')
+    logger.error('This is an error message')
+    logger.critical('This is a critical message')
+
+
 
     modules = Modules()
     for filename in os.listdir(dir):
         if(re.fullmatch(r"\w+\.v", filename)):
-            with open(os.path.join("files", dir + "/" + filename), 'r') as f:
+            with open(os.path.join(dir + "/" + filename), 'r') as f:
                 print(f'Reading...{filename}')
                 words_str = ""
                 for line in f:
@@ -478,6 +649,7 @@ def main():
                     words_str += line
                 
                 #words_str = re.sub(r"([^\w])", r" \1 ", words_str)
+                words_str = re.sub(r"(\w)(=)(\w)", r"\1 \2 \3", words_str)
                 words_str = re.sub(r"([\(\);,])", r" \1 ", words_str)
                 words_str = re.sub(r"\s*([\(\)])\s*",r" \1 ",words_str)
 
@@ -501,25 +673,12 @@ def main():
                     print(f'{filename} was not a module nor primitive.')
                 else:
                     modules.add(module)
-
-
-
-                pass
-
-
-                
-
-                
-                    
-
-
-                #
-                #print('"\n"'.join(words.words))
                 module.dump()
+                pass
     #print(modules.get_modules(r"\w+crc\w+"))
     modules.disp_tree("usbh_host")
 
-    modules.get_modules("usbh_host")[0].get_ports("cfg_araddr_i")[0].dump()
+    #modules.get_modules("usbh_host")[0].get_ports("cfg_araddr_i")[0].dump()
 
     for module in modules.modules:
         ports = []
@@ -528,7 +687,6 @@ def main():
         ports = module.get_ports("clk_i", direction="input")
         ports = module.get_ports("clk_i", direction="output")
 
-    module.serch_instance("u_crc5")
 
 
 
