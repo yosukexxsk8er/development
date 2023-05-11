@@ -383,12 +383,13 @@ class Locals(Local_base):
 
 class Module:
     SIG_TYPE_LIST= ["ports", "regs", "wires", "genvars", "localparams", "parameters"]
-    def __init__(self,words:Words, logger=None, log_level=logging.INFO):
+    def __init__(self,dir, filename, logger=None, log_level=logging.INFO):
+
+        #メンバ変数の定義・初期化
         self.name = None
         self.signals_dict = {}
         for sig_type in self.SIG_TYPE_LIST:
             self.signals_dict[sig_type]        = []
-        #self.signals["instances"]    = []
         self.instances               = []
         self.modules = []
         self.logger = None
@@ -407,9 +408,10 @@ class Module:
                 self.logger.addHandler(stream_handler)
         else:
             self.logger = logger
-
         self.logger.info("Start to analize a verilog...")
 
+        #RTL Fileを読み込んで、Word単位に分割したオブジェクトに変換
+        words = self._rtl_to_words(dir, filename)
 
         #モジュール名、(paramter、)を取得
         while(words.does_reach_to_end() is False):
@@ -522,6 +524,38 @@ class Module:
                 list.append(port)
         return list
 
+    def _rtl_to_words(self, dir, filename):
+        with open(os.path.join(dir + "/" + filename), 'r') as f:
+            self.logger.info(f'Reading...{filename}')
+            words_str = ""
+            for line in f:
+                line = re.sub("//.*","", line)
+                line = re.sub("\n"," ", line)
+                if(line==""):
+                    continue
+                words_str += line
+            
+            words_str = re.sub(r"(\w)(=)(\w)", r"\1 \2 \3", words_str)
+            words_str = re.sub(r"([\(\);,])", r" \1 ", words_str)
+            words_str = re.sub(r"\s*([\(\)])\s*",r" \1 ",words_str)
+
+            words_str = re.sub(r"\[\s*(\d+)\s*:\s*(\d+)\s*\]", r"[\1:\2]", words_str)
+            words_str = re.sub(r"\[\s*(\d+)\s*\]", r"[\1]", words_str)
+
+            #[ ] 内の空白を削除
+            p = re.compile(r'\[([^\]]+)\]')
+            m_list = p.finditer(words_str)
+            for m in m_list:
+                words_str = re.sub(r"\[" + m.group(1) + r"\]", f'[{m.group(1).replace(" ","")}]',words_str)
+
+            words_str = re.sub(r"([#])\s*",r"\1",words_str) # 一部の記号は後ろの単語にくっつける。
+
+
+            _ = re.split(r"\s+",words_str)
+            _ = [a for a in _ if a != '']
+            words = Words(_)
+            return words
+
 
 class Modules:
     def __init__(self, logger=None, log_level=logging.INFO):
@@ -614,67 +648,24 @@ def main():
     logger = logging.getLogger('my_logger')
     # ログのレベルを設定
     logger.setLevel(log_level)
-
     # ログのフォーマット設定
     formatter = logging.Formatter('[%(name)s][%(levelname)-10s] %(message)s\t\t[Module:%(module)s][Func:%(funcName)s]')
-
-
     # ハンドラの作成とフォーマットの設定
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)
-
     # ロガーにハンドラを追加
     logger.addHandler(stream_handler)
-
-    # ログ出力
-    logger.debug('This is a debug message')
-    logger.info('This is an info message')
-    logger.warning('This is a warning message')
-    logger.error('This is an error message')
-    logger.critical('This is a critical message')
-
-
 
     modules = Modules()
     for filename in os.listdir(dir):
         if(re.fullmatch(r"\w+\.v", filename)):
-            with open(os.path.join(dir + "/" + filename), 'r') as f:
-                print(f'Reading...{filename}')
-                words_str = ""
-                for line in f:
-                    line = re.sub("//.*","", line)
-                    line = re.sub("\n"," ", line)
-                    if(line==""):
-                        continue
-                    words_str += line
-                
-                #words_str = re.sub(r"([^\w])", r" \1 ", words_str)
-                words_str = re.sub(r"(\w)(=)(\w)", r"\1 \2 \3", words_str)
-                words_str = re.sub(r"([\(\);,])", r" \1 ", words_str)
-                words_str = re.sub(r"\s*([\(\)])\s*",r" \1 ",words_str)
-
-                words_str = re.sub(r"\[\s*(\d+)\s*:\s*(\d+)\s*\]", r"[\1:\2]", words_str)
-                words_str = re.sub(r"\[\s*(\d+)\s*\]", r"[\1]", words_str)
-
-                #[ ] 内の空白を削除
-                p = re.compile(r'\[([^\]]+)\]')
-                m_list = p.finditer(words_str)
-                for m in m_list:
-                    words_str = re.sub(r"\[" + m.group(1) + r"\]", f'[{m.group(1).replace(" ","")}]',words_str)
-
-                words_str = re.sub(r"([#])\s*",r"\1",words_str) # 一部の記号は後ろの単語にくっつける。
-
-
-                _ = re.split(r"\s+",words_str)
-                _ = [a for a in _ if a != '']
-                words = Words(_)
-                module = Module(words)
-                if(module.name is None):
-                    print(f'{filename} was not a module nor primitive.')
-                else:
-                    modules.add(module)
-                module.dump()
-                pass
+            module = Module(dir,filename)
+            if(module.name is None):
+                print(f'{filename} was not a module nor primitive.')
+            else:
+                modules.add(module)
+            module.dump()
+            pass
     #print(modules.get_modules(r"\w+crc\w+"))
     modules.disp_tree("usbh_host")
 
