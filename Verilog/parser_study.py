@@ -535,6 +535,8 @@ class Module:
                     continue
                 words_str += line
             
+            words_str = re.sub(r"/\*", r"/* ", words_str)
+            words_str = re.sub(r"\*/", r" */", words_str)
             words_str = re.sub(r"(\w)(=)(\w)", r"\1 \2 \3", words_str)
             words_str = re.sub(r"([\(\);,])", r" \1 ", words_str)
             words_str = re.sub(r"\s*([\(\)])\s*",r" \1 ",words_str)
