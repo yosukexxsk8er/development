@@ -1,0 +1,9 @@
+{
+  "recipients": ["recipient1@example.com", "recipient2@example.com"],
+  "start_file": "header1.txt",
+  "end_file": "header2.txt",
+  "body_file": "body.txt",
+  "subject": "今日のレポート",
+  "subject_for_start": "今日のスタートレポート",
+  "subject_for_end": "今日のエンドレポート"
+}
