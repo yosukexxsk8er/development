@@ -1,59 +1,109 @@
 {
-    "Bodies":[
-        { "memo" : "",                    "size" : 10.0, "font" : "SourceSansPro-Regular", "color":0, "indent":50.58660125732422 },
-        { "memo" : "",                    "size" : 10.0, "font" : "SourceSansPro-Bold"   , "color":0, "indent":50.58660125732422 },
-        { "memo" : "Implementation body", "size" : 10.0, "font" : "SourceSansPro-Bold"   , "color":0, "indent":67.58660125732422 },
-        { "memo" : "Implementation body", "size" : 10.0, "font" : "SourceSansPro-Regular", "color":0, "indent":67.58660125732422 }
-    ]
-    , "Items1" :[
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":59.546600341796875 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":62.58660125732422 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":70.58660125732422 }
-    ]
-    , "Items2" :[
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":79.04170227050781 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":82.58662414550781 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":90.58660125732422 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":92.58660125732422 }
-    ]
-    , "Items3" :[
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":99.04170227050781 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":102.58662414550781 },
-        { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":110.58660125732422 }
-    ]
-    , "Items4" :[ { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":0 }]
-    , "Items5" :[ { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":0 }]
-    , "Title1" :[
-        { "memo" : "L1 num", "size" : 72.0, "font" : "*" , "color":"*", "indent":"*" },
-        { "memo" : "L1",     "size" : 18.0, "font" : "*" , "color":"*", "indent":"*" }
-    ]
-    , "Title2" :[ { "memo" : "L2",     "size" : 16.0, "font" : "*" , "color":"*", "indent":"*" } ]
-    , "Title3" :[ { "memo" : "L3",     "size" : 14.0, "font" : "*" , "color":"*", "indent":"*" } ]
-    , "Title4" :[ { "memo" : "L4",     "size" : 13.0, "font" : "*" , "color":"*", "indent":"*" } ]
-    , "Title5" :[ { "memo" : "L5",     "size" : 12.0, "font" : "*" , "color":"*", "indent":"*" } ]
-    , "FigureBodies" :[
-        { "memo" : "", "size": "*", "font" : "ArialMT" , "color":"*", "indent":"*" }
-    ]
-    , "FigureTitles" :[
-        { "memo" : "", "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*" }
-    ]
-    , "TableBodies" :[
-        { "memo" : "", "size" : 9.0, "font" : "SourceSansPro-Regular", "color":0, "indent":"*" }
-    ]
-    , "TableTitles" :[
-        { "memo" : "", "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*" }
-    ]
-    , "Notes" :[
-        { "memo" : "number", "size" : 6.224999904632568, "font" : "SourceSansPro-Regular", "color":"*", "indent":"*" },
-        { "memo" : ""      , "size" : 7.5,               "font" : "SourceSansPro-Regular", "color":"*", "indent":"*" }
-    ]
-    , "Pages" :[
-        { "memo" : "", "size" : 9.0, "font" : "SourceSansPro-Regular", "color":24744, "indent":"*" }
-    ]
-    , "Header" :[
-        { "memo" : "", "size" : 12.75, "font" : "*", "color":16777215, "indent":"*" }
-    ]
-    , "NoMatch" :[
-        { "memo" : "", "size" : "*", "font" : "*", "color":"*", "indent":"*" }
-    ]
+    "Table" :{
+        "Keywords" : ["shall", "should", "must", "need", "can", "may", "could", "might"]
+    },
+    "MPHY" :{
+        "Invalid":[{ "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : "<80" ,     "memo": "Header"       , "flags" : "*" },
+                   { "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : ">740",     "memo": "Footer"       , "flags" : "*" },
+                   { "size" : 9.000000000000000, "font" : "CourierNewPS-BoldMT" , "color":11842740,  "indent":"*", "vertical" : "*",        "memo":"Line Number"   , "flags" : "*" }
+        ]
+        ,"Bodies":[{ "size" : 9.960000038146973, "font" : "TimesNewRomanPSMT"       , "color":0, "indent":"*", "vertical" : "*", "flags" : "*" },
+                   { "size" : 9.960000038146973, "font" : "TimesNewRomanPS-BoldItal", "color":0, "indent":"*", "vertical" : "*", "flags" : "*" },
+                   { "size" : 9.960000038146973, "font" : "SymbolMT"                , "color":0, "indent":"*", "vertical" : "*", "flags" : 0  , "memo": "・"},
+                   { "size" : 9.960000038146973, "font" : "TimesNewRomanPS-ItalicMT", "color":0, "indent":"*", "vertical" : "*", "flags" : "*", "memo": "シンボル" },
+                   { "size" : 6.480000019073486, "font" : "TimesNewRomanPSMT"       , "color":0, "indent":"*", "vertical" : "*", "flags" : "*", "memo": "シンボルで使われる下付き文字" }
+        ]
+        , "Title1" :[       { "size" : 14.039999961853027, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
+        , "Title2" :[       { "size" : 12.000000000000000, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
+        , "Title3" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
+        , "Title4" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16, "memo": "表名と区別付かない。"}]
+        , "Title5" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16 }]
+
+        , "Items1" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":59.546600341796875, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":62.58660125732422, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":70.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items2" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":79.04170227050781, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":82.58662414550781, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":90.58660125732422, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":92.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items3" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":99.04170227050781, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":102.58662414550781, "vertical" : "*", "flags" : "*" },
+                            { "size" : 10.0, "font" : "*"   , "color":0, "indent":110.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items4" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":0, "vertical" : "*", "flags" : "*" }]
+        , "Items5" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":0, "vertical" : "*", "flags" : "*" }]
+
+        , "FigureBodies" :[ { "size": "*", "font" : "ArialMT" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "FigureTitles" :[ { "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "TableBodies" :[  { "size" : 9.0, "font" : "SourceSansPro-Regular", "color":0, "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "TableTitles" :[  { "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "Notes" :[        { "size" : 6.224999904632568, "font" : "SourceSansPro-Regular", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" },
+                            { "size" : 7.5,               "font" : "SourceSansPro-Regular", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "Pages"   :[      { "size" : 9.0, "font" : "SourceSansPro-Regular", "color":24744, "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "NoMatch" :[      { "size" : "*", "font" : "*", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+
+    },
+    "PCIe" : {
+        "Bodies":[
+            { "memo" : "",                    "size" : 10.0, "font" : "SourceSansPro-Regular", "color":0, "indent":50.58660125732422, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",                    "size" : 10.0, "font" : "SourceSansPro-Bold"   , "color":0, "indent":50.58660125732422, "vertical" : "*", "flags" : "*" },
+            { "memo" : "Implementation body", "size" : 10.0, "font" : "SourceSansPro-Bold"   , "color":0, "indent":67.58660125732422, "vertical" : "*", "flags" : "*" },
+            { "memo" : "Implementation body", "size" : 10.0, "font" : "SourceSansPro-Regular", "color":0, "indent":67.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items1" :[
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":59.546600341796875, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":62.58660125732422, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":70.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items2" :[
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":79.04170227050781, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":82.58662414550781, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":90.58660125732422, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":92.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items3" :[
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":99.04170227050781, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":102.58662414550781, "vertical" : "*", "flags" : "*" },
+            { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":110.58660125732422, "vertical" : "*", "flags" : "*" }
+        ]
+        , "Items4" :[ { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":0, "vertical" : "*", "flags" : "*" }]
+        , "Items5" :[ { "memo" : "",     "size" : 10.0, "font" : "*"   , "color":0, "indent":0, "vertical" : "*", "flags" : "*" }]
+        , "Title1" :[
+            { "memo" : "L1 num", "size" : 72.0, "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" },
+            { "memo" : "L1",     "size" : 18.0, "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "Title2" :[ { "memo" : "L2",     "size" : 16.0, "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "Title3" :[ { "memo" : "L3",     "size" : 14.0, "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "Title4" :[ { "memo" : "L4",     "size" : 13.0, "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "Title5" :[ { "memo" : "L5",     "size" : 12.0, "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "FigureBodies" :[
+            { "memo" : "", "size": "*", "font" : "ArialMT" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "FigureTitles" :[
+            { "memo" : "", "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "TableBodies" :[
+            { "memo" : "", "size" : 9.0, "font" : "SourceSansPro-Regular", "color":0, "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "TableTitles" :[
+            { "memo" : "", "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "Notes" :[
+            { "memo" : "number", "size" : 6.224999904632568, "font" : "SourceSansPro-Regular", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" },
+            { "memo" : ""      , "size" : 7.5,               "font" : "SourceSansPro-Regular", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "Pages" :[
+            { "memo" : "", "size" : 9.0, "font" : "SourceSansPro-Regular", "color":24744, "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "Header" :[
+            { "memo" : "", "size" : 12.75, "font" : "*", "color":16777215, "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+        , "NoMatch" :[
+            { "memo" : "", "size" : "*", "font" : "*", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" }
+        ]
+    }
 }
