@@ -21,25 +21,27 @@ class Attr:
         self.vertical = vertical
 
     def __eq__(self, other):
-        flag = True
         if(other.size != "*" and self.size != other.size):
-            flag = False
+            return False
         if(other.font != "*" and self.font != other.font):
-            flag = False
+            return False
         if(other.color != "*" and self.color != other.color):
-            flag = False
+            return False
         if(other.flags != "*" and self.flags != other.flags):
-            flag = False
-        if(other.indent != "*" and self.indent != other.indent):
-            flag = False
+            return False
+        if(other.indent != "*"):
+            if(isinstance(other.indent,list) and other.indent[0]<=self.indent<=other.indent[1]):
+                pass
+            elif(self.indent != other.indent):
+                return False
         if(other.vertical != "*"):
             vertical_float = float(other.vertical[1:])
             if(other.vertical[0] == ">"  and self.vertical < vertical_float):
-                flag = False
+                return False
             if(other.vertical[0] == "<"  and self.vertical > vertical_float):
-                flag = False
+                return False
 
-        return flag
+        return True
     
 #ParegraphクラスがクラスLineを配列のとして格納する
 # Lineには、 spanを解析することで分類された属性と文からなる。
@@ -139,7 +141,11 @@ def main():
             
             # 解析用に json file formatで取得した内容(Page毎)をファイルに書き出す()
                 #print(doc[page].get_text("json"))
-            f.write(doc[page].get_text("json"))
+            try:
+                f.write(doc[page].get_text("json"))
+            except IndexError:
+                break
+                
             images = doc[page].get_images()
             if(len(images)):
                 try:
@@ -171,11 +177,17 @@ def main():
 
 
 
-    ignore_list = ["Invalid", "FigureBodies", "NoMatch"]
+    ignore_list = ["Invalid", "FigureBodies", "NoMatch", "flag0", "flag2"]
+
     debug_file = "pdf_w_PyMuPDF_debug.log"
     with open (debug_file, "w", encoding='utf-8') as f:
         for line in analyzed_lines:
-            f.write(f'type:{line.type:15s},font:{line.span.get("font"):30s}, size:{line.span.get("size"):17.15f}, color:{line.span.get("color"):8d}, flag:{line.span.get("flags"):2d}, indent:{line.span.get("origin")[0]:19.15f},vertical:{line.span.get("origin")[1]:19.15f}, \t{line.text}\n')
+            if(False and line.type == "Invalid"):
+                pass
+            elif(re.fullmatch(r'\s*', line.text)):
+                pass
+            else:
+                f.write(f'type:{line.type:15s},font:{line.span.get("font"):30s}, size:{line.span.get("size"):17.15f}, color:{line.span.get("color"):8d}, flag:{line.span.get("flags"):2d}, indent:{line.span.get("origin")[0]:19.15f},vertical:{line.span.get("origin")[1]:19.15f}, \t{line.text}\n')
 
         for line in analyzed_lines:
             if(line.type in ignore_list):
@@ -183,12 +195,20 @@ def main():
             f.write(f'type:{line.type:15s},\t{line.text}\n')
 
     analyzed_lines_wo_invalid = []
+    pre_type = None
     for line in analyzed_lines:
         if(line.type in ignore_list):
-            continue
-        if(line.text==""):
-            continue
-        analyzed_lines_wo_invalid.append(line)
+            pass
+        elif(line.type == "Mirror" and pre_type in ignore_list):
+            pass
+        elif(re.fullmatch(r'\s*',line.text)):
+            pass
+        else:
+            if(line.type =="Mirror"):
+                line.type = pre_type
+            analyzed_lines_wo_invalid.append(line)
+        if(line.type !="Mirror"):
+            pre_type = line.type
 
     result_file = "pdf_w_PyMuPDF_out.csv"
     connect_flag = False
@@ -222,6 +242,7 @@ def main():
         table_title.append("Description")
         for keyword in keywords:
             table_title.append(f"{keyword}")
+        table_title.append(f"any")
 
 
         for i, a_title in enumerate(table_title):
@@ -236,7 +257,7 @@ def main():
             if(connect_flag):
                 str += line.text
             else:
-                if(pre_type == "Bodies"):
+                if(pre_type in ["Bodies", "BulletPoint"]): #前回もBodies なら文が前かから続いていると判断
                     while(True):
                         m = re.search(r"(?P<match>.*?\.) " , str)
                         if(m):
@@ -245,6 +266,10 @@ def main():
                             # 両端にある " " を削除
                             match = match.strip(" ")
                             search_result = search_keywords(match,keywords)
+                            if("x" in search_result):
+                                search_result.append("x")
+                            else:
+                                search_result.append("-")
                             f.write(f',"{match}",')
                             f.write(",".join(search_result))
                             f.write('\n')
@@ -263,6 +288,10 @@ def main():
                             str = str.strip(" ")
                             if(str!=""):
                                 search_result = search_keywords(str,keywords)
+                                if("x" in search_result):
+                                    search_result.append("x")
+                                else:
+                                    search_result.append("-")
                                 f.write(f',"{str}",')
                                 f.write(",".join(search_result))
                                 f.write('\n')
@@ -283,6 +312,10 @@ def main():
                     row+=1
                 elif(pre_type is not None):
                     search_result = search_keywords(str,keywords)
+                    if("x" in search_result):
+                        search_result.append("x")
+                    else:
+                        search_result.append("-")
                     f.write(f',"{str}",')
                     f.write(",".join(search_result))
                     f.write('\n')
@@ -299,14 +332,15 @@ def main():
             if(i<last):
                 next_line = analyzed_lines_wo_invalid[i+1]
                 if(line.type==next_line.type):
-                    if(next_line.text=="•"):
-                        connect_flag = False
                     if(line.type in ["FigureTitles", "TableTitles"]):
                         connect_flag = False
                     else:
                         connect_flag = True
                 else:
-                    connect_flag = False
+                    if(line.type=="BulletPoint"):
+                        connect_flag = True
+                    else:
+                        connect_flag = False
             else:
                 connect_flag = True
             pre_type = line.type

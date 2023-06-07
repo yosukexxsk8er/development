@@ -1,23 +1,46 @@
 {
     "Table" :{
-        "Keywords" : ["shall", "should", "must", "need", "can", "may", "could", "might"]
+        "Keywords" : ["mandatory", "shall", "should", "must", "need", "can", "may", "could", "might", "recommended"]
+    },
+    "MPHY2" :{
+        "Invalid":[{ "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : "<80" ,     "memo": "Header"       , "flags" : "*" },
+                   { "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : ">740",     "memo": "Footer"       , "flags" : "*" },
+                   { "size" : 9.000000000000000, "font" : "CourierNewPS-BoldMT" , "color":11842740,  "indent":"*", "vertical" : "*",        "memo":"Line Number"   , "flags" : "*" }
+        ]
+        , "BulletPoint" :[  { "size" :  "*", "font" : "SymbolMT" , "color":       0, "indent":90, "vertical" : "*", "flags" : 0 }]
+
+        , "Title1" :[       { "size" : 14.039999961853027, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
+        , "Title2" :[       { "size" : 12.000000000000000, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
+        , "Title3" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
+        , "Title4" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16, "memo": "表名と区別付かない。"}]
+        , "Title5" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16 }]
+        ,"Bodies"   :[ { "size" : "*", "font" : "*" , "color":"*", "indent":[ 89, 91], "vertical" : "*", "flags" : "*" }
+                      ,{ "size" : "*", "font" : "*" , "color":"*", "indent":[104,105], "vertical" : "*", "flags" : "*", "memo": "注釈の1行目"}
+                      ,{ "size" : "*", "font" : "*" , "color":"*", "indent":[118,119], "vertical" : "*", "flags" : "*", "memo": "注釈の2行目以降" }
+                      ,{ "size" : "*", "font" : "*" , "color":"*", "indent":[ 94, 95], "vertical" : "*", "flags" : "*", "memo": "注釈の1行目"}
+                      ,{ "size" : "*", "font" : "*" , "color":"*", "indent":[114,115], "vertical" : "*", "flags" : "*", "memo": "注釈の2行目以降" }
+                      ,{ "size" : "*", "font" : "*" , "color":"*", "indent":[108,109], "vertical" : "*", "flags" : "*", "memo": "Note" }
+        ]
+        , "flag0"  :[       { "size" : "*", "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : 0 } ]
+        , "flag2"  :[       { "size" : "*", "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : 2 } ]
+        ,"Items1"   :[ { "size" : "*", "font" : "*" , "color":"*", "indent":[103,104], "vertical" : "*", "flags" : "*" } ]
+        , "FigureBodies" :[ { "size": "*", "font" : "ArialMT" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        , "Mirror" :[      { "size" : "*", "font" : "*", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
     },
     "MPHY" :{
         "Invalid":[{ "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : "<80" ,     "memo": "Header"       , "flags" : "*" },
                    { "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : ">740",     "memo": "Footer"       , "flags" : "*" },
                    { "size" : 9.000000000000000, "font" : "CourierNewPS-BoldMT" , "color":11842740,  "indent":"*", "vertical" : "*",        "memo":"Line Number"   , "flags" : "*" }
         ]
-        ,"Bodies":[{ "size" : 9.960000038146973, "font" : "TimesNewRomanPSMT"       , "color":0, "indent":"*", "vertical" : "*", "flags" : "*" },
-                   { "size" : 9.960000038146973, "font" : "TimesNewRomanPS-BoldItal", "color":0, "indent":"*", "vertical" : "*", "flags" : "*" },
-                   { "size" : 9.960000038146973, "font" : "SymbolMT"                , "color":0, "indent":"*", "vertical" : "*", "flags" : 0  , "memo": "・"},
-                   { "size" : 9.960000038146973, "font" : "TimesNewRomanPS-ItalicMT", "color":0, "indent":"*", "vertical" : "*", "flags" : "*", "memo": "シンボル" },
-                   { "size" : 6.480000019073486, "font" : "TimesNewRomanPSMT"       , "color":0, "indent":"*", "vertical" : "*", "flags" : "*", "memo": "シンボルで使われる下付き文字" }
-        ]
+        , "Test"   :[       { "size" : "*", "font" : "*" , "color":"*", "indent":[89000,91000], "vertical" : "*", "flags" : "*" } ]
+
         , "Title1" :[       { "size" : 14.039999961853027, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
         , "Title2" :[       { "size" : 12.000000000000000, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
         , "Title3" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
         , "Title4" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16, "memo": "表名と区別付かない。"}]
         , "Title5" :[       { "size" :  9.960000038146973, "font" : "Arial-BoldMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16 }]
+
+        , "BulletPoint" :[  { "size" :  "*", "font" : "SymbolMT" , "color":       0, "indent":"*", "vertical" : "*", "flags" : 16 }]
 
         , "Items1" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":59.546600341796875, "vertical" : "*", "flags" : "*" },
                             { "size" : 10.0, "font" : "*"   , "color":0, "indent":62.58660125732422, "vertical" : "*", "flags" : "*" },
@@ -34,6 +57,13 @@
         ]
         , "Items4" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":0, "vertical" : "*", "flags" : "*" }]
         , "Items5" :[       { "size" : 10.0, "font" : "*"   , "color":0, "indent":0, "vertical" : "*", "flags" : "*" }]
+
+        ,"Bodies":[{ "size" : 9.960000038146973, "font" : "TimesNewRomanPSMT"       , "color":0, "indent":"*", "vertical" : "*", "flags" : "*" },
+                   { "size" : 9.960000038146973, "font" : "TimesNewRomanPS-BoldItal", "color":0, "indent":"*", "vertical" : "*", "flags" : "*" },
+                   { "size" : 9.960000038146973, "font" : "SymbolMT"                , "color":0, "indent":"*", "vertical" : "*", "flags" : 0  , "memo": "・, BulletPoint"},
+                   { "size" : 9.960000038146973, "font" : "TimesNewRomanPS-ItalicMT", "color":0, "indent":"*", "vertical" : "*", "flags" : "*", "memo": "シンボル" },
+                   { "size" : 6.480000019073486, "font" : "TimesNewRomanPSMT"       , "color":0, "indent":"*", "vertical" : "*", "flags" : "*", "memo": "シンボルで使われる下付き文字" }
+        ]
 
         , "FigureBodies" :[ { "size": "*", "font" : "ArialMT" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
         , "FigureTitles" :[ { "size" : 10.0, "font" : "SourceSansPro-It", "color":22940, "indent":"*", "vertical" : "*", "flags" : "*" } ]
