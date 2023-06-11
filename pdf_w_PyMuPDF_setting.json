@@ -7,7 +7,14 @@
                    { "size" : "*",               "font" : "*"                   , "color":"*",       "indent":"*", "vertical" : ">740",     "memo": "Footer"       , "flags" : "*" },
                    { "size" : 9.000000000000000, "font" : "CourierNewPS-BoldMT" , "color":11842740,  "indent":"*", "vertical" : "*",        "memo":"Line Number"   , "flags" : "*" }
         ]
-        , "BulletPoint" :[  { "size" :  "*", "font" : "SymbolMT" , "color":       0, "indent":90, "vertical" : "*", "flags" : 0 }]
+        , "BulletPoint" :[  { "size" :  "*", "font" : "SymbolMT" , "color":       0, "indent": 90, "vertical" : "*", "flags" : 0 },
+                            { "size" :  "*", "font" : "SymbolMT" , "color":       0, "indent":108, "vertical" : "*", "flags" : 0 }
+                        ]
+        , "FigureBodies" :[ { "size": "*", "font" : "ArialMT"               , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" },
+                            { "size": "*", "font" : "ArialNarrow"           , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" },
+                            { "size": "*", "font" : "ArialNarrow-Italic"    , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" }
+                            { "size": "*", "font" : "Arial-ItalicMT"        , "color":"*", "indent":"*", "vertical" : "*", "flags" : 999999, "memo": "Arial-ItalicMT は注釈でも使用されるので、flag=99999 でわざとマッチしないようにしている。" }
+                        ]
 
         , "Title1" :[       { "size" : 14.039999961853027, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
         , "Title2" :[       { "size" : 12.000000000000000, "font" : "Arial-BoldMT" , "color":16737792, "indent":"*", "vertical" : "*", "flags" : 16 } ]
@@ -24,7 +31,7 @@
         , "flag0"  :[       { "size" : "*", "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : 0 } ]
         , "flag2"  :[       { "size" : "*", "font" : "*" , "color":"*", "indent":"*", "vertical" : "*", "flags" : 2 } ]
         ,"Items1"   :[ { "size" : "*", "font" : "*" , "color":"*", "indent":[103,104], "vertical" : "*", "flags" : "*" } ]
-        , "FigureBodies" :[ { "size": "*", "font" : "ArialMT" , "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
+        ,"Items2"   :[ { "size" : "*", "font" : "*" , "color":"*", "indent":[125,126], "vertical" : "*", "flags" : "*" } ]
         , "Mirror" :[      { "size" : "*", "font" : "*", "color":"*", "indent":"*", "vertical" : "*", "flags" : "*" } ]
     },
     "MPHY" :{
