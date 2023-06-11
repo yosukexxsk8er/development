@@ -95,7 +95,67 @@ def search_keywords(str, keywords):
             result.append("-")
         else:
             result.append("x")
+    if("x" in result):
+        result.append("x")
+    else:
+        result.append("-")
     return result
+
+
+class Write:
+    def __init__(self, worksheet, file_object, start_row_pos=1, paragraph_col="A", description_col="B",
+                 font_name = 'メイリオ',
+                 fill_style=PatternFill(patternType='solid', fgColor='ADFF2F')):
+        self.ws = worksheet
+        self.f  = file_object
+        self.row=start_row_pos
+        self.p_col = paragraph_col
+        self.d_col = description_col
+        self.font_name = font_name
+        self.fill_style = fill_style
+        pass
+
+    def write_title(self, title:list, col, row_inc_val_after_write=1, 
+                    apply_style_fill=False, 
+                    wrap=False,
+                    bold=False, 
+                    underline=None, 
+                    italic=False):
+        cell = self.ws[f"{col}{self.row}"]
+        col_num = openpyxl.utils.cell.column_index_from_string(col)
+        for i, a_title in enumerate(title):
+            cur_col_num = col_num + i
+            cur_col_str = openpyxl.utils.cell.get_column_letter(cur_col_num)
+            cell = self.ws.cell(column=cur_col_num,row=self.row)
+            cell.value  = a_title
+            self.ws[cell.coordinate].font = Font(name=self.font_name, bold=bold, underline=underline, italic=italic)
+            self.ws.column_dimensions[cur_col_str].width = len(a_title) *1.6
+            self.f.write(f'"{a_title}",')
+        self.row+=row_inc_val_after_write
+
+    def change_width (self,col,width):
+        self.ws.column_dimensions[col].width = width
+
+
+
+        
+    def write_down(self, value:str, additional_list:list, col, row_inc_val_after_write=1, apply_style_fill=False, wrap=False, bold=False, underline=None, italic=False):
+        self.f.write(f',"{str}",')
+        self.f.write(",".join(additional_list))
+        self.f.write('\n')
+        cell = self.ws[f"{col}{self.row}"]
+        cell.value = value
+        if(apply_style_fill):
+            self.ws[cell.coordinate].fill = self.fill_style
+        if(wrap):
+            cell.alignment = openpyxl.styles.Alignment(wrapText=True)
+        self.ws[cell.coordinate].font = Font(name=self.font_name, bold=bold, underline=underline, italic=italic)
+        for col_ofs,a_result in enumerate(additional_list):
+            cell.offset(column=col_ofs+1,row=0).value=a_result
+            if(a_result=="x"):
+                self.ws[cell.offset(column=col_ofs+1,row=0).coordinate].fill = self.fill_style
+        self.row+=row_inc_val_after_write
+        pass
 
 def main():
     
@@ -111,7 +171,7 @@ def main():
     filename=args.filename
     doc_type=args.doc_type
     page_start = args.start_page -1 #88
-    page_range = args.end_page - args.start_page #40
+    page_end   = args.end_page
     #filename = r"C:\Users\phantasm\Downloads\NCB-PCI_Express_Base_5.0r1.0-2019-05-22.pdf"
 
     # ２：PDFテキストを格納するリスト作成
@@ -136,8 +196,10 @@ def main():
 
     analyzed_lines = []
     dump_file = "pdf_w_PyMuPDF_dump.json"
+    if(page_end > doc.page_count):
+        page_end = doc.page_count
     with open (dump_file, "w") as f:
-        for page in tqdm(range(page_start, page_start+page_range)):
+        for page in tqdm(range(page_start, page_end -1)):
             
             # 解析用に json file formatで取得した内容(Page毎)をファイルに書き出す()
                 #print(doc[page].get_text("json"))
@@ -212,6 +274,7 @@ def main():
 
     result_file = "pdf_w_PyMuPDF_out.csv"
     connect_flag = False
+    put_flag     = False
     body_flag    = False
 
     
@@ -227,15 +290,18 @@ def main():
     font = Font(name='メイリオ')
 
     fill = PatternFill(patternType='solid', fgColor='ADFF2F')
+    
 
 
 
 
 
     with open (result_file, "w", encoding='utf-8') as f:
+        wp = Write(worksheet=ws, file_object=f, start_row_pos=1, paragraph_col="A", description_col="B")
         last = len(analyzed_lines_wo_invalid) -1
         str = ""
         pre_type = None
+
         # Print Title of the table
         table_title = []
         table_title.append("Par. Name")
@@ -243,21 +309,29 @@ def main():
         for keyword in keywords:
             table_title.append(f"{keyword}")
         table_title.append(f"any")
-
-
-        for i, a_title in enumerate(table_title):
-            ws.cell(column=i+1,row=1,value=a_title)
-            cell = ws.cell(column=i+1,row=1)
-            ws[cell.coordinate].font = font
-            f.write(f'"{a_title}",')
+        wp.write_title(table_title, col="A", bold=True)
+        wp.change_width(description_col,100)
 
         f.write(f',\n')
-        row = 2
         for i,line in enumerate(analyzed_lines_wo_invalid):
-            if(connect_flag):
-                str += line.text
+            if(i<last):
+                next_line = analyzed_lines_wo_invalid[i+1]
+                if(line.type==next_line.type):
+                    put_flag = False
+                else:
+                    if(next_line.type=="BulletPoint"):
+                        #リストが連続していても、 ・ が出てくれば一旦出力
+                        put_flag = True
+                    elif(line.type=="BulletPoint" and next_line.type.startswith("Items")):
+                        put_flag = False
+                    else:
+                        put_flag = True
             else:
-                if(pre_type in ["Bodies", "BulletPoint"]): #前回もBodies なら文が前かから続いていると判断
+                put_flag = True
+
+            if(put_flag):
+                str += line.text
+                if(line.type == "Bodies"):
                     while(True):
                         m = re.search(r"(?P<match>.*?\.) " , str)
                         if(m):
@@ -266,84 +340,30 @@ def main():
                             # 両端にある " " を削除
                             match = match.strip(" ")
                             search_result = search_keywords(match,keywords)
-                            if("x" in search_result):
-                                search_result.append("x")
-                            else:
-                                search_result.append("-")
-                            f.write(f',"{match}",')
-                            f.write(",".join(search_result))
-                            f.write('\n')
-                            cell = ws[f"{description_col}{row}"]
-                            cell.value = match
-                            cell.alignment = openpyxl.styles.Alignment(wrapText=True)
-                            ws[cell.coordinate].font = font
-                            for col_ofs,a_result in enumerate(search_result):
-                                cell.offset(column=col_ofs+1,row=0).value=a_result
-                                if(a_result=="x"):
-                                    ws[cell.offset(column=col_ofs+1,row=0).coordinate].fill = fill
-                            row+=1
+                            wp.write_down(value=match, additional_list=search_result, col=description_col, wrap=True)
 
                         else:
                             # 両端にある " " を削除
                             str = str.strip(" ")
                             if(str!=""):
                                 search_result = search_keywords(str,keywords)
-                                if("x" in search_result):
-                                    search_result.append("x")
-                                else:
-                                    search_result.append("-")
-                                f.write(f',"{str}",')
-                                f.write(",".join(search_result))
-                                f.write('\n')
-                                cell = ws[f"{description_col}{row}"]
-                                cell.value = str
-                                cell.alignment = openpyxl.styles.Alignment(wrapText=True)
-                                ws[cell.coordinate].font = font
-                                for col_ofs,a_result in enumerate(search_result):
-                                    cell.offset(column=col_ofs+1,row=0).value=a_result
-                                row+=1
+                                wp.write_down(value=str, additional_list=search_result, col=description_col, wrap=True)
                             break
-                elif(pre_type is not None and pre_type.startswith("Title")):
-                    f.write(f'"{str}",')
-                    f.write('\n')
-                    cell = ws[f"{paragraph_col}{row}"]
-                    ws[cell.coordinate].font = font
-                    cell.value = str
-                    row+=1
-                elif(pre_type is not None):
+                elif(line.type.startswith("Items")):
                     search_result = search_keywords(str,keywords)
-                    if("x" in search_result):
-                        search_result.append("x")
-                    else:
-                        search_result.append("-")
-                    f.write(f',"{str}",')
-                    f.write(",".join(search_result))
-                    f.write('\n')
-                    cell = ws[f"{description_col}{row}"]
-                    cell.value = str
-                    cell.alignment = openpyxl.styles.Alignment(wrapText=True)
-                    ws[cell.coordinate].font = font
-                    for col_ofs,a_result in enumerate(search_result):
-                        cell.offset(column=col_ofs+1,row=0).value=a_result
-
-
-                    row+=1
-                str  = line.text
-            if(i<last):
-                next_line = analyzed_lines_wo_invalid[i+1]
-                if(line.type==next_line.type):
-                    if(line.type in ["FigureTitles", "TableTitles"]):
-                        connect_flag = False
-                    else:
-                        connect_flag = True
-                else:
-                    if(line.type=="BulletPoint"):
-                        connect_flag = True
-                    else:
-                        connect_flag = False
+                    put_indent = ""
+                    if(line.type=="Items2"):
+                        put_indent = "    "
+                    wp.write_down(value=put_indent+str, additional_list=search_result, col=description_col, wrap=True)
+                elif(line.type.startswith("Title")):
+                    wp.write_down(value=str, additional_list=[], col=paragraph_col, wrap=False)
+                elif(str!=""):
+                    search_result = search_keywords(str,keywords)
+                    wp.write_down(value=str, additional_list=search_result, apply_style_fill=True, col=description_col, wrap=False)
+                str = ""
             else:
-                connect_flag = True
-            pre_type = line.type
+                str += line.text
+
     
     wb.save(result_xsl)
                     
