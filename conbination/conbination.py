@@ -25,7 +25,7 @@ def expand_to_list(str_or_other):
         delta  = int(m.group(3))
         return list(range(start, end+delta, delta))
     else:
-        return str_or_other.split(",")
+        return re.split(r"\s*,\s*", str_or_other)
 
 def df_swapped_to_excel(df):
     """ df の行と列を入れ替え、エクセルに保存
@@ -40,11 +40,27 @@ def df_swapped_to_excel(df):
     wb = openpyxl.Workbook()
     ws = wb.active
     # 行列をExcelに書き込む
-    for row in transposed_matrix:
-        ws.append(row.tolist())
+    for i, row in enumerate(transposed_matrix):
+        row_list = row.tolist()
+        row_list.insert(0,list(df.columns)[i])
+        ws.append(row_list)
     # Excelファイルを保存
     wb.save('excel_file.xlsx')
 
+    
+PRESET_DICT = {
+    "P0" : (0.10, 0.90),
+    "P1" : (0.15, 0.85),
+    "P2" : (0.20, 0.80),
+    "P3" : (0.25, 0.75),
+    "P4" : (0.30, 0.70),
+    "P5" : (0.35, 0.65),
+    "P6" : (0.40, 0.60),
+    "P7" : (0.45, 0.55),
+    "P8" : (0.50, 0.50),
+    "P9" : (0.55, 0.45),
+    
+}
 def main():
     workbook="conditions.xlsx"
     worksheet="Sheet1"
@@ -53,29 +69,37 @@ def main():
 
     expanded_table_list = []
     #ワークシートを1列ずつ読み込み
+    columns = []
     for i_col, cols in enumerate(ws.iter_cols()):
-        if(i_col==0):
-            continue
         expanded_table = []
         for i_row, cell in enumerate(cols):
             if(i_row==0):
                 continue
-            #行頭、行末の空白削除、連続する空白を1つに置換
-            value = re.sub(r'\s+', ' ', str(cell.value).lstrip().rstrip() )
-            # 値を展開した結果(配列)を別の配列に格納
-            values = expand_to_list(value)
-            expanded_table.append(values)
-        expanded_table_list.append(expanded_table)
+            if(i_col==0):
+                columns.append(cell.value)
+                continue
+            else:
+                #行頭、行末の空白削除、連続する空白を1つに置換
+                value = re.sub(r'\s+', ' ', str(cell.value).lstrip().rstrip() )
+                # 値を展開した結果(配列)を別の配列に格納
+                values = expand_to_list(value)
+                expanded_table.append(values)
+        if(i_col!=0):
+            expanded_table_list.append(expanded_table)
         
     df_list = []
     test_no = 1
+    POS_PRESET = 3
+    POS_TAP1   = 4
+    POS_TAP3   = 5
     for expanded_table in expanded_table_list:
         # 1列分のデータから全組み合わせを生成し、組み合わせを1つずつデータフレームを格納
         for params in list(itertools.product(*expanded_table)):
             params = list(params) #tuple をリストに変更
             params[0] = test_no # No は新規に振り直し
+            params[POS_TAP1], params[POS_TAP3] = PRESET_DICT[params[POS_PRESET]]
             #テスト条件1つを１つのデータフレームとして保存
-            df_sub = pd.DataFrame([params], columns=["no", "vamp", "hoge", "preset"])
+            df_sub = pd.DataFrame([params], columns=columns)
             #そのデータフレームをリストに格納
             df_list.append(df_sub)
             test_no += 1
