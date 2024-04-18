@@ -1,0 +1,6 @@
+セット名,CPU,コードネーム,グラフィック機能,チップセット,マザーボード,メモリ,M.2 SSD,OS,ATX電源,価格,PCIe 5.0スロット
+A,Intel Core i5-13400F,Alder Lake,なし,B660,MSI MAG B660M Tomahawk WiFi DDR4,DDR4-3200 4GB x 2,Crucial P5 Plus 500GB,Windows 11 Home,550W 80PLUS Bronze,6万円,1 x16
+B,AMD Ryzen 5 5600G,Cezanne,あり,B550,ASUS TUF Gaming B550M-PLUS (Wi-Fi),DDR4-3200 4GB x 2,Crucial P5 Plus 500GB,Windows 11 Home,550W 80PLUS Bronze,5.5万円,1 x16
+C,Intel Core i3-12100F,Alder Lake,なし,H610,ASRock H610M-HDV/M.2 WiFi,DDR4-3200 4GB x 2,Crucial P5 Plus 500GB,Windows 11 Home,450W 80PLUS Bronze,4万円,1 x4
+D,AMD Ryzen 3 3200G,Renoir,あり,B450,Gigabyte B450M DS3H Micro ATX AM4,DDR4-3200 4GB x 2,Crucial P5 Plus 500GB,Windows 11 Home,450W 80PLUS Bronze,3.5万円,1 x16
+E,Intel Pentium Gold G5400,Alder Lake,なし,H610,ASUS Prime H610M-E DDR4,DDR4-3200 4GB x 2,Crucial P5 Plus 500GB,Windows 11 Home,450W 80PLUS Bronze,3万円,1 x4
