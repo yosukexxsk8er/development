@@ -6,13 +6,13 @@ import json
 
 def main():
     file_prefix = "maintenance_note"
-    json_file = "./loadbike/" + file_prefix + ".json"
+    json_file = "./" + file_prefix + ".json"
     csv_filename = "./Activities_Merged.csv"
 
     with open(json_file, "r", encoding="utf-8_sig") as f:
         json_dict = json.load(f)
     files = json_dict["Activities"]
-    merge_activities(files,dir="./loadbike/", save_name=csv_filename)
+    merge_activities(files,dir="./", save_name=csv_filename)
     activities = maintenance_note.Activities(csv_filename)
     #distance  =activities.distance(date(2022,1,1), date(2022,12,31))
     #print(f'Distance:{distance:.2f}[km]')

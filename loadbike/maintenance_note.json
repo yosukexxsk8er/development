@@ -1,8 +1,6 @@
 {
   "Activities":[
-    "Activities (14).csv",
-    "Activities (13).csv",
-    "Activities (12).csv"
+    "Activities (18).csv"
   ],
   "Parts":[
     {
@@ -28,8 +26,10 @@
       ,"2022/01/15"
       ,"2022/08/10"
       ,"2023/01/12"
+      ,"2023/04/26"
       ],
-      "EndDate": null
+      "EndDate": null,
+      "Memo": "グリス切れていた＠2023/04/26"
     },
     {
       "Name": "シーラント交換(前)",
@@ -101,7 +101,34 @@
       "Model": "Yksion",
       "StartDate": "2022/08/10",
       "ChangeDate": [],
-      "EndDate": null
+      "EndDate": "2023/04/28",
+      "Memo": "GWの前の早めの交換。一度パンクした状態で走ったのでダメージあったし。"
+    },
+    {
+      "Name": "Vittoria ルビーノ(後)",
+      "Model": "",
+      "StartDate": "2023/05/01",
+      "ChangeDate": [],
+      "EndDate": "2023/05/01",
+      "Memo": "ネジを踏んでパンク"
+    },
+    {
+      "Name": "Vittoria ルビーノ(後)",
+      "Model": "",
+      "StartDate": "2023/05/02",
+      "ChangeDate": [],
+      "EndDate": "2023/08/16",
+      "Memo": "サイドの傷によるスローパンクが直らず"
+    },
+    {
+      "Name": "Agilest DURO TLR(後)",
+      "Model": "",
+      "StartDate": "2023/08/20",
+      "ChangeDate": [
+        "2024/03/14"
+      ],
+      "EndDate": null,
+      "Memo": "24年3月にドレッド剥がれ頻発"
     },
     {
       "Name": "IRC Tire 1(前)",
@@ -109,7 +136,26 @@
       "StartDate": "2022/09/20",
       "ChangeDate":[
       ],
-      "EndDate": null
+      "EndDate": "2023/06/09",
+      "Memo":"2023/04/26 パンク修理"
+    },
+    {
+      "Name": "Vittoria Corsa(前)",
+      "Model": "",
+      "StartDate": "2023/06/10",
+      "ChangeDate":[
+      ],
+      "EndDate": "2023/10/02",
+      "Memo":"パンク"
+    },
+    {
+      "Name": "Agilest DURO TLR(前)",
+      "Model": "",
+      "StartDate": "2023/10/7",
+      "ChangeDate":[
+      ],
+      "EndDate": null,
+      "Memo":"パンク"
     },
     {
       "Name": "チェーン1",
@@ -167,7 +213,7 @@
       "Name": "シフトワイヤー(前) 交換",
       "Model": null,
       "StartDate": "2020/05/10",
-      "ChangeDate": [],
+      "ChangeDate": ["2024/04/27"],
       "EndDate": null
     },
     {
@@ -177,7 +223,8 @@
       "Model": null,
       "StartDate": "2020/05/10",
       "ChangeDate":[
-        "2023/02/01"
+        "2023/02/01",
+        "2023/12/01"
       ],
       "EndDate": null
     },
@@ -211,6 +258,32 @@
       "Model": null,
       "StartDate": "2020/05/10",
       "ChangeDate": [],
+      "EndDate": null
+    },
+    {
+      "Name": "ブレーキシュー（前）",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2018/03/24",
+      "ChangeDate": [
+        "2020/01/01",
+        "2023/08/22"
+
+      ],
+      "EndDate": null
+    },
+    {
+      "Name": "ブレーキシュー（後）",
+      "Positon": null,
+      "Type": "交換",
+      "Model": null,
+      "StartDate": "2018/03/24",
+      "ChangeDate": [
+        "2020/01/01",
+        "2023/08/22"
+
+      ],
       "EndDate": null
     },
     {

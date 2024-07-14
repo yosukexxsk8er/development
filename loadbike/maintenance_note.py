@@ -25,6 +25,9 @@ def main():
     pass
     
 
+#COL_DISTANCE = "Distance"
+COL_DISTANCE = "距離"
+COL_DATE     = "日付"
     
 class Activities:
     def __init__(self,csv_file):
@@ -40,15 +43,15 @@ class Activities:
     def distance(self, start_date, end_date):
         sum = 0
         for activity in self.activities:
-            if(start_date<= activity["日付"] <=end_date):
-                sum+= activity["距離"]
+            if(start_date<= activity[f"{COL_DATE}"] <=end_date):
+                sum+= activity[f"{COL_DISTANCE}"]
         return sum
 
     def _dec_garmin_line(self,keys,line):
         dict = {}
         for j,cell in enumerate(line):
             key = keys[j]
-            if(key=="日付"):
+            if(key==f"{COL_DATE}"):
                 cell = datetime.datetime.strptime(cell, '%Y-%m-%d %H:%M:%S').date()
             try:
                 cell = float(cell)
