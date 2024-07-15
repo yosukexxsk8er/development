@@ -34,7 +34,14 @@ def csv_to_json(input_csv, output_json, target_id):
         # Find the index of the target ID in the "ID" column
         target_index = setting_dict["ID"].index(target_id)
         selected_dict = {}
+
         selected_dict["ID"] = target_id
+
+        # Global Settings
+        for row in rows[0:id_row_index]:
+            if(row[0]!=""):
+                selected_dict[row[0]] = row[1]
+
         
         # Create a dictionary with settings corresponding to the target ID
         for key, value in setting_dict.items():
@@ -42,6 +49,8 @@ def csv_to_json(input_csv, output_json, target_id):
                 continue
             else:
                 selected_dict[key] = value[target_index]
+
+            
         
         # Write the selected data to a JSON file
         with open(output_json, mode='w', encoding='utf-8') as json_file:
@@ -53,6 +62,7 @@ def main():
     parser.add_argument('--target_id', type=int, help='Target ID to extract from the CSV')
     parser.add_argument('--input_csv', type=str, help='Input CSV file path')
     parser.add_argument('--output_dir', type=str, help='Output directory for JSON file')
+    parser.add_argument('--type_name', type=str, help='')
 
     # Parse the command line arguments
     args = parser.parse_args()
@@ -61,7 +71,8 @@ def main():
     input_csv = args.input_csv
     output_dir = args.output_dir
     target_id = args.target_id
-    output_json_name = f"{target_id:02d}_setting.json"
+    type_name = args.type_name
+    output_json_name = f"{target_id:02d}_{type_name}.json"
     output_json_path = os.path.join(output_dir, output_json_name)
 
     # Create the output directory if it doesn't exist
