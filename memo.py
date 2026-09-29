@@ -1,11 +1,12 @@
 import mymisc as rt
 import time
+import datetime
 
 
 class Exec_sample:
     def __init__(self):
         pass
-    def exec(self,s):
+    def exec(self,s:str):
         print(s)
         s = s.replace("$", "self.")
         exec(s)
@@ -15,8 +16,15 @@ class Exec_sample:
         print(vars(self))
 
 
-    
+def set_round_time()->datetime:
+    """return time replaced min and sec as zero.
 
+    Returns:
+        datetime: current time replaced min and sec as zero.
+    """
+    dt = datetime.datetime.today()
+    dt = dt.replace(minute=0, second=0, microsecond=0)
+    return dt
 
 def pickup(org:int, range:list[int], name="")->int:
     msb=range[0]
@@ -54,7 +62,7 @@ def main():
         pickup(0xA,[2,1], name="STAT")
         polling(0b11,range=[3,2],timeout=10, interval=0.5)
 
-    if(True):
+    if(False):
         hoge= Exec_sample()
         hoge.exec("$a=100")
         hoge.exec("$b=200")
@@ -62,10 +70,12 @@ def main():
         hoge.exec("$a=$a*2")
         hoge.dump()
 
+    if(True):
+        print(set_round_time())
+
 
 if __name__ == "__main__":
     main()
-
 
 
 
