@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import random
 import string
+import datetime
 
 """
     Basic use of the Table Element
@@ -52,6 +53,11 @@ table = window['-TABLE-']
 
 user_click = True
 selected = []
+double_click_dt_s = None
+double_click_dt_e = None
+double_click_dt_diff =  datetime.timedelta(seconds=1)
+
+
 while True:
     event, values = window.read()
     print(event, values)
@@ -65,14 +71,23 @@ while True:
         window['-TABLE-'].update(row_colors=((8, 'white', 'red'), (9, 'green')))
     elif event == '-TABLE-':
         if user_click:
-            if len(values['-TABLE-']) == 1:
-                select = values['-TABLE-'][0]
-                if select in selected:
-                    selected.remove(select)
-                else:
-                    selected.append(select)
-                table.update(select_rows=selected)
-                user_click = False
+            double_click_dt_e = datetime.datetime.now()
+            if(double_click_dt_s is not None):
+                dt_diff = double_click_dt_e - double_click_dt_s
+                print(f'start={double_click_dt_s}')
+                print(f'end  ={double_click_dt_e}')
+                print(f'diff={dt_diff}')
+                print(f'{type(dt_diff)}, {type(double_click_dt_diff)}')
+                if(dt_diff < double_click_dt_diff):
+                    if len(values['-TABLE-']) == 1:
+                        select = values['-TABLE-'][0]
+                        if select in selected:
+                            selected.remove(select)
+                        else:
+                            selected.append(select)
+                        table.update(select_rows=selected)
+                        user_click = False
+            double_click_dt_s = double_click_dt_e
         else:
             user_click = True
 
