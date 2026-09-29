@@ -23,11 +23,21 @@ def extract_gz_files(folder_path):
 
 
 def main():
-    var: gpx_file_name_list
-        # 地図を作成
+    # 地図を作成
     map_center = [35.681236, 139.767125]  # 東京駅の座標
-    zoom_level = 5
-    m = folium.Map(location=map_center, zoom_start=zoom_level, tiles='CartoDB positron')
+    zoom_level = 10
+    # 地形と道路の両方が見えるStamen Terrainタイルを使用
+    m = folium.Map(location=map_center, zoom_start=zoom_level, tiles=None)
+    folium.TileLayer(
+        tiles="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png",
+        attr='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> '
+             '&copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> '
+             '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> '
+             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        name='Stamen Terrain',
+        max_zoom=20,
+    ).add_to(m)
+    folium.LayerControl().add_to(m)
     gpx_file_name_list = []
 
     # フォルダ内のGPXファイルとFITファイルのパスを取得
@@ -79,7 +89,12 @@ def main():
                     for segment in track.segments:
                         for point in segment.points:
                             coords.append([point.latitude, point.longitude])
-                folium.PolyLine(coords).add_to(m)
+                folium.PolyLine(
+                    coords,
+                    color='#e74c3c',
+                    weight=4,
+                    opacity=0.9,
+                ).add_to(m)
     
     
     # 地図を保存
