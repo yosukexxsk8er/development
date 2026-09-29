@@ -15,6 +15,7 @@ class LogWindow:
         self.text.config(yscrollcommand=self.scrollbar.set)
 
     def pack(self):
+        # ログフレームを左寄せで表示、拡張設定あり
         self.log_frame.pack(fill=tk.BOTH, expand=True)
         self.text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -40,9 +41,10 @@ class InputForm:
         self.button = tk.Button(self.master, text="Submit", command=self.submit)
 
     def pack(self):
-        self.label.pack(pady=5)
-        self.text_box.pack(pady=5)
-        self.button.pack(pady=5)
+        # 左寄せで、左に10pxの余白を追加
+        self.label.pack(anchor="w", padx=10, pady=5)
+        self.text_box.pack(anchor="w", padx=10, pady=5)
+        self.button.pack(anchor="w", padx=10, pady=5)
 
     def submit(self):
         """テキストボックスの内容を取得して表示"""
@@ -71,13 +73,15 @@ class AppBase:
             self.log_window.log_message("終了します。")
 
     def pack(self):
-        """ボタンを順番にパック"""
-        self.button.pack(pady=5)
+        """ボタンを左寄せで順番にパック"""
+        self.button.pack(anchor="w", padx=10, pady=5)
 
 
 def main():
     # JSONファイルのパス
     file_path = 'tkinter_trial.json'
+    window_width = 400
+    window_height = 600
 
     # JSONファイルを読み込み
     with open(file_path, 'r', encoding="utf-8") as file:
@@ -85,7 +89,7 @@ def main():
 
     # メインウィンドウの作成
     window = tk.Tk()
-    window.geometry("400x600")  # 幅と高さを設定
+    window.geometry(f"{window_width}x{window_height}")  # 幅と高さを設定
     window.title("Tkinterを使ってみましょう！！")
 
     # ログウィンドウの作成
@@ -99,9 +103,10 @@ def main():
     for conf in conf_dict:
         app = AppBase(conf["Name"], log_window, input_form)
         app.gen_button(window)
-        app.pack()
+        app.pack()  # 左寄せでパック
         app_list.append(app)
 
+    # 入力フォームとログウィンドウの配置
     input_form.pack()
     log_window.pack()
 
