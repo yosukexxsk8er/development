@@ -1,8 +1,10 @@
 {
   "Activities":[
     "Activities (1).csv",
+    "Activities (2).csv",
     "Activities (18).csv",
-    "Activities.csv"
+    "Book1.csv",
+    "Activities (19).csv"
   ],
   "Parts":[
     {
@@ -17,6 +19,7 @@
       ,"2023/04/01"
       ,"2024/04/01"
       ,"2025/04/01"
+      ,"2026/04/01"
       ],
       "EndDate": null,
       "Memo":"これはメモです"
@@ -31,6 +34,8 @@
       ,"2022/08/10"
       ,"2023/01/12"
       ,"2023/04/26"
+      ,"2025/04/27"
+      ,"2026/02/07"
       ],
       "EndDate": null,
       "Memo": "グリス切れていた＠2023/04/26"
@@ -79,21 +84,6 @@
       "EndDate": "2021/01/10"
     },
     {
-      "Name": "Yksion 2(後)",
-      "Model": "Yksion",
-      "StartDate": "2019/09/28",
-      "ChangeDate": [],
-      "EndDate": "2021/01/10"
-    },
-    {
-      "Name": "Yksion 1(後)",
-      "Model": "Yksion",
-      "StartDate": "2021/01/10",
-      "ChangeDate": [],
-      "EndDate": "2021/09/25",
-      "Memo": "前タイヤを後ろへローテーション。天竜川でスローパンク発生後に交換(？)"
-    },
-    {
       "Name": "Yksion 3(前)",
       "Model": "Yksion",
       "StartDate": "2021/01/10",
@@ -108,6 +98,51 @@
       "ChangeDate":[],
       "EndDate": "2022/09/18",
       "Memo":"ビート劣化。茅野手前でパンク"
+    },
+    {
+      "Name": "IRC Tire 1(前)",
+      "Model": "IRC",
+      "StartDate": "2022/09/20",
+      "ChangeDate":[
+      ],
+      "EndDate": "2023/06/09",
+      "Memo":"2023/04/26 パンク修理"
+    },
+    {
+      "Name": "Vittoria Corsa(前)",
+      "Model": "",
+      "StartDate": "2023/06/10",
+      "ChangeDate":[
+      ],
+      "EndDate": "2023/10/02",
+      "Memo":"パンク"
+    },
+    {
+      "Name": "Agilest DURO TLR(前)",
+      "Model": "",
+      "StartDate": "2023/10/7",
+      "ChangeDate":[
+        "2024/12/05",
+        "2025/12/05",
+        "2026/02/15"
+      ],
+      "EndDate": null,
+      "Memo":""
+    },
+    {
+      "Name": "Yksion 2(後)",
+      "Model": "Yksion",
+      "StartDate": "2019/09/28",
+      "ChangeDate": [],
+      "EndDate": "2021/01/10"
+    },
+    {
+      "Name": "Yksion 1(後)",
+      "Model": "Yksion",
+      "StartDate": "2021/01/10",
+      "ChangeDate": [],
+      "EndDate": "2021/09/25",
+      "Memo": "前タイヤを後ろへローテーション。天竜川でスローパンク発生後に交換(？)"
     },
     {
       "Name": "Yksion 5(後)",
@@ -146,38 +181,11 @@
       "StartDate": "2023/08/20",
       "ChangeDate": [
         "2024/03/14",
-        "2024/11/27"
+        "2024/11/27",
+        "2025/07/13"
       ],
       "EndDate": null,
       "Memo": "24年3月にドレッド剥がれ頻発"
-    },
-    {
-      "Name": "IRC Tire 1(前)",
-      "Model": "IRC",
-      "StartDate": "2022/09/20",
-      "ChangeDate":[
-      ],
-      "EndDate": "2023/06/09",
-      "Memo":"2023/04/26 パンク修理"
-    },
-    {
-      "Name": "Vittoria Corsa(前)",
-      "Model": "",
-      "StartDate": "2023/06/10",
-      "ChangeDate":[
-      ],
-      "EndDate": "2023/10/02",
-      "Memo":"パンク"
-    },
-    {
-      "Name": "Agilest DURO TLR(前)",
-      "Model": "",
-      "StartDate": "2023/10/7",
-      "ChangeDate":[
-        "2024/12/05"
-      ],
-      "EndDate": null,
-      "Memo":""
     },
     {
       "Name": "チェーン1",
@@ -207,7 +215,8 @@
       "StartDate": "2021/09/24",
       "ChangeDate": [
         "2022/08/15",
-        "2023/02/01"
+        "2023/02/01",
+        "2026/04/21"
       ],
       "EndDate": "2023/03/31"
     },
@@ -218,15 +227,16 @@
       "Model": null,
       "StartDate": "2023/03/31",
       "ChangeDate": [
+        "2025/08/01"
       ],
       "EndDate":null
     },
     {
-      "Name": "チェーン3(脱脂)",
+      "Name": "チェーン4",
       "Positon": null,
       "Type": "交換",
       "Model": null,
-      "StartDate": "2023/03/31",
+      "StartDate": "2025/08/01",
       "ChangeDate": [
       ],
       "EndDate":null
@@ -245,10 +255,14 @@
       "Model": null,
       "StartDate": "2020/05/10",
       "ChangeDate":[
-        "2023/02/01",
-        "2023/12/01"
+        "2021/09/19",
+        "2023/01/07",
+        "2023/11/25",
+        "2025/03/20",
+        "2026/05/02"
       ],
-      "EndDate": null
+      "EndDate": null,
+      "Memo":"23/2/1は履歴から削除。23/1/7断線＠多摩湖、23/12/01~Optisilick, 25/03/20~Normal"
     },
     {
       "Name": "シフトアウターケーブル交換",
