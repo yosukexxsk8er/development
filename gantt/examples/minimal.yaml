@@ -1,0 +1,52 @@
+# 最小サンプル — 動作確認用
+# python ../gantt_gen.py minimal.yaml -o ../output/minimal.html
+title: 新規案件 サンプルガント
+start: 2026-10-05
+weeks: 8
+milestones:
+  - at: 2026-11-01
+    label: M1 中間レビュー
+  - at: 2026-11-29
+    label: M2 納品
+phases:
+  - name: 企画・要件定義
+    color: "#4a90d9"
+    tasks:
+      - name: 要件ヒアリング
+        short: ヒアリング
+        start: 2026-10-05
+        end: 2026-10-16
+        effort: 5人日
+        owner: PM
+        deliverable: 要件メモ
+      - name: 仕様策定
+        short: 仕様策定
+        start: 2026-10-12
+        end: 2026-10-23
+        effort: 5人日
+        owner: PM, FE
+        deliverable: 仕様書v1
+  - name: 実装
+    tasks:
+      - name: プロトタイプ実装
+        start: 2026-10-19
+        end: 2026-11-13
+        effort: 15人日
+        owner: FE
+        deliverable: 動作品
+  - name: 検証・納品
+    color: "#d95c5c"
+    tasks:
+      - name: 受け入れテスト
+        short: 受入テスト
+        start: 2026-11-09
+        end: 2026-11-20
+        effort: 5人日
+        owner: VE
+        deliverable: テスト結果
+      - name: 納品
+        start: 2026-11-23
+        end: 2026-11-29
+        effort: 2人日
+        owner: PM
+        deliverable: 納品物一式

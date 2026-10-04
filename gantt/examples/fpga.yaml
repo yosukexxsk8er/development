@@ -1,0 +1,203 @@
+# FPGAプロトタイプ開発 — リファレンスYAML（現行HTMLの再現用）
+# 生成: python ../gantt_gen.py fpga.yaml -o ../output/fpga.html
+title: FPGAプロトタイプ開発 ガントチャート
+subtitle: ▼ マウスオーバーでサブタスク詳細
+start: 2025-07-06
+weeks: 22
+
+milestones:
+  - at: 2025-08-10
+    label: M1 設計完了
+  - at: 2025-09-14
+    label: M2 RTL完了
+  - at: 2025-10-12
+    label: M3 タイミング収束
+  - at: 2025-11-09
+    label: M4 実機動作
+  - at: 2025-12-06
+    label: M5 完了
+
+phases:
+  - name: 企画・要件定義
+    color: "#4a90d9"
+    tasks:
+      - name: 要件定義・仕様書作成
+        short: 要件定義
+        start: 2025-07-06
+        end: 2025-07-17
+        lane: 0
+        effort: 10人日
+        owner: FE, SE
+        deliverable: 要求仕様書
+      - name: アーキテクチャ設計
+        short: アーキ設計
+        start: 2025-07-13
+        end: 2025-07-24
+        lane: 1
+        effort: 5人日
+        owner: アーキテクト
+        deliverable: アーキ設計書
+      - name: コンポーネント選定
+        short: 選定
+        start: 2025-07-20
+        end: 2025-07-31
+        lane: 0
+        effort: 3人日
+        owner: FE
+        deliverable: 選定レポート
+
+  - name: RTL設計・実装
+    color: "#38b25a"
+    tasks:
+      - name: ブロック図・I/F設計
+        short: I/F設計
+        start: 2025-07-20
+        end: 2025-07-31
+        lane: 0
+        effort: 5人日
+        owner: FE
+        deliverable: ブロック図
+      - name: RTLコーディング
+        short: RTLコーディング
+        start: 2025-07-27
+        end: 2025-08-28
+        lane: 0
+        effort: 20人日
+        owner: FE ×2
+        deliverable: RTLコード
+      - name: 単体シミュレーション
+        short: 単体Sim
+        start: 2025-08-24
+        end: 2025-09-11
+        lane: 0
+        effort: 10人日
+        owner: FE, VE
+        deliverable: Sim結果レポート
+
+  - name: 論理合成・実装
+    color: "#d9922e"
+    tasks:
+      - name: 論理合成
+        short: 合成
+        start: 2025-08-24
+        end: 2025-09-04
+        lane: 0
+        effort: 5人日
+        owner: FE
+        deliverable: 合成結果
+      - name: 配置配線 (P&R)
+        short: P&R
+        start: 2025-08-31
+        end: 2025-09-11
+        lane: 0
+        effort: 5人日
+        owner: FE
+        deliverable: 配置配線結果
+      - name: 静的タイミング解析 (STA)
+        short: STA
+        start: 2025-09-07
+        end: 2025-09-18
+        lane: 0
+        effort: 5人日
+        owner: FE
+        deliverable: STAレポート
+      - name: タイミング最適化
+        short: 最適化
+        start: 2025-09-14
+        end: 2025-10-09
+        lane: 0
+        effort: 10人日
+        owner: FE
+        deliverable: 最適化結果
+
+  - name: 検証
+    color: "#d95c5c"
+    tasks:
+      - name: 結合シミュレーション
+        short: 結合Sim
+        start: 2025-09-07
+        end: 2025-10-02
+        lane: 0
+        effort: 12人日
+        owner: VE
+        deliverable: 結合Sim結果
+      - name: ポストレイアウト検証
+        short: PostLayout
+        start: 2025-09-21
+        end: 2025-10-09
+        lane: 0
+        effort: 5人日
+        owner: VE
+        deliverable: PostLayout検証結果
+      - name: 消費電力解析
+        short: 電力解析
+        start: 2025-10-05
+        end: 2025-10-23
+        lane: 0
+        effort: 5人日
+        owner: FE
+        deliverable: 電力レポート
+
+  - name: 実機評価
+    color: "#8a6ec7"
+    tasks:
+      - name: ボード準備・環境構築
+        short: 準備
+        start: 2025-10-05
+        end: 2025-10-16
+        lane: 0
+        effort: 3人日
+        owner: HW
+        deliverable: 環境構築完了
+      - name: 実機動作確認
+        short: 動作確認
+        start: 2025-10-12
+        end: 2025-10-30
+        lane: 0
+        effort: 8人日
+        owner: FE, HW
+        deliverable: 動作検証レポート
+      - name: 性能測定・評価
+        short: 測定
+        start: 2025-10-26
+        end: 2025-11-06
+        lane: 0
+        effort: 5人日
+        owner: FE
+        deliverable: 性能評価レポート
+      - name: デバッグ・改修
+        short: デバッグ改修
+        start: 2025-10-26
+        end: 2025-11-20
+        lane: 1
+        effort: 12人日
+        owner: FE, VE
+        deliverable: 修正版コード
+
+  - name: ドキュメント・納品
+    color: "#4faec4"
+    tasks:
+      - name: 設計ドキュメント作成
+        short: 設計Doc
+        start: 2025-11-02
+        end: 2025-11-20
+        lane: 0
+        effort: 8人日
+        owner: FE
+        deliverable: 設計書
+      - name: テストレポート作成
+        short: TestReport
+        start: 2025-11-16
+        end: 2025-11-27
+        lane: 0
+        effort: 5人日
+        owner: VE
+        deliverable: テストレポート
+      - name: 納品・引継ぎ
+        short: 納品
+        start: 2025-11-23
+        end: 2025-12-04
+        lane: 0
+        effort: 3人日
+        owner: PM
+        deliverable: 納品物一式

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>新規案件 サンプルガント</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', sans-serif; padding: 12px; background: #f5f6f8; }
+h1 { font-size: 14px; margin-bottom: 2px; color: #222; }
+.subtitle { font-size: 9px; color: #888; margin-bottom: 6px; }
+.gantt-wrap { overflow-x: auto; background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.05); padding: 8px 10px 6px; }
+.gw, .gm { display: flex; }
+.sp { width: 135px; min-width: 135px; }
+.gw-c { flex: 1; display: flex; }
+.week { flex: 1; font-size: 7px; color: #999; text-align: center; }
+.week:nth-child(even) { color: #ddd; }
+.gm-c { flex: 1; position: relative; height: 16px; }
+.milestone { position: absolute; top: 2px; transform: translateX(-50%); text-align: center; }
+.milestone .diamond { display: block; font-size: 7px; color: #d63031; line-height: 1; }
+.milestone .mlbl { display: block; font-size: 6px; color: #999; white-space: nowrap; font-weight: 500; margin-top: -1px; }
+.phase-row { display: flex; align-items: stretch; margin-bottom: 1px; }
+.phase-label { width: 135px; min-width: 135px; font-size: 9px; font-weight: 600; color: #333; display: flex; align-items: center; padding-right: 6px; }
+.phase-label .tag { display: inline-block; font-size: 7px; font-weight: 700; border-radius: 2px; padding: 0 3px; margin-right: 4px; color: #fff; line-height: 14px; }
+.phase-track-wrap { flex: 1; min-width: 0; }
+.phase-track { position: relative; height: 20px; background: #f0f2f5; border-radius: 3px; overflow: hidden; }
+.seg { position: absolute; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 600; color: #fff; cursor: default; }
+.seg:hover { opacity: .85; z-index: 2; }
+.seg .s-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 1px; text-align: center; max-width: 100%; line-height: 1; pointer-events: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; padding-top: 4px; border-top: 1px solid #eee; font-size: 9px; color: #555; }
+.legend-item { display: flex; align-items: center; gap: 3px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.sub-section { margin-top: 8px; }
+.sub-section h2 { font-size: 10px; color: #444; margin-bottom: 2px; }
+.sub-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+.sub-table th { background: #f8f9fb; color: #666; font-weight: 600; padding: 2px 5px; text-align: left; border-bottom: 1px solid #ccc; }
+.sub-table td { padding: 1px 5px; border-bottom: 1px solid #eee; color: #444; }
+.sub-table td:first-child { font-weight: 500; }
+.sub-badge { display: inline-block; font-size: 7px; font-weight: 700; color: #fff; border-radius: 2px; padding: 0 3px; line-height: 13px; }
+</style>
+</head>
+<body>
+
+<h1>新規案件 サンプルガント</h1>
+<p class="subtitle">▼ マウスオーバーでサブタスク詳細</p>
+
+<div class="gantt-wrap">
+
+  <!-- Week header -->
+  <div class="gw">
+    <div class="sp"></div>
+    <div class="gw-c">
+      <div class="week">10/5</div><div class="week">10/12</div><div class="week">10/19</div><div class="week">10/26</div><div class="week">11/2</div><div class="week">11/9</div><div class="week">11/16</div><div class="week">11/23</div>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="gm">
+    <div class="sp"></div>
+    <div class="gm-c">
+      <div class="milestone" style="left:48.21%"><span class="diamond">&#9670;</span><span class="mlbl">M1 中間レビュー</span></div>
+      <div class="milestone" style="left:98.21%"><span class="diamond">&#9670;</span><span class="mlbl">M2 納品</span></div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#4a90d9">1</span>企画・要件定義</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:0.00%;width:21.43%;top:3px;background:#4990d9" title="10/5-10/16 要件ヒアリング"><span class="s-label">ヒアリング</span></div>
+        <div class="seg" style="left:12.50%;width:21.43%;top:6px;background:#6ca3dc" title="10/12-10/23 仕様策定"><span class="s-label">仕様策定</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#38b25a">2</span>実装</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:25.00%;width:46.43%;top:3px;background:#38b25a" title="10/19-11/13 プロトタイプ実装"><span class="s-label">プロトタイプ実装</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#d95c5c">3</span>検証・納品</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:62.50%;width:21.43%;top:3px;background:#d95b5b" title="11/9-11/20 受け入れテスト"><span class="s-label">受入テスト</span></div>
+        <div class="seg" style="left:87.50%;width:12.50%;top:3px;background:#dd7d7d" title="11/23-11/29 納品"><span class="s-label">納品</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div>Phase1 企画</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#38b25a"></div>Phase2 実装</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d95c5c"></div>Phase3 検証・納品</div>
+    <div class="legend-item"><span style="color:#d63031;font-size:12px">&#9670;</span> マイルストーン</div>
+  </div>
+
+</div>
+
+<!-- Sub-task assignment table -->
+<div class="sub-section">
+<h2>サブタスク割り当て一覧</h2>
+<table class="sub-table">
+  <thead>
+    <tr><th style="width:20px">#</th><th style="width:140px">サブタスク</th><th style="width:80px">期間</th><th style="width:60px">工数</th><th>担当</th><th>成果物</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="sub-badge" style="background:#4990d9">1</span></td><td>要件ヒアリング</td><td>10/5-10/16</td><td>5人日</td><td>PM</td><td>要件メモ</td></tr>
+    <tr><td><span class="sub-badge" style="background:#6ca3dc">1</span></td><td>仕様策定</td><td>10/12-10/23</td><td>5人日</td><td>PM, FE</td><td>仕様書v1</td></tr>
+    <tr><td><span class="sub-badge" style="background:#38b25a">2</span></td><td>プロトタイプ実装</td><td>10/19-11/13</td><td>15人日</td><td>FE</td><td>動作品</td></tr>
+    <tr><td><span class="sub-badge" style="background:#d95b5b">3</span></td><td>受け入れテスト</td><td>11/9-11/20</td><td>5人日</td><td>VE</td><td>テスト結果</td></tr>
+    <tr><td><span class="sub-badge" style="background:#dd7d7d">3</span></td><td>納品</td><td>11/23-11/29</td><td>2人日</td><td>PM</td><td>納品物一式</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- generated from YAML: start=2026-10-05 weeks=8 total_days=56 -->
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>FPGAプロトタイプ開発 ガントチャート</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', sans-serif; padding: 12px; background: #f5f6f8; }
+h1 { font-size: 14px; margin-bottom: 2px; color: #222; }
+.subtitle { font-size: 9px; color: #888; margin-bottom: 6px; }
+.gantt-wrap { overflow-x: auto; background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.05); padding: 8px 10px 6px; }
+.gw, .gm { display: flex; }
+.sp { width: 135px; min-width: 135px; }
+.gw-c { flex: 1; display: flex; }
+.week { flex: 1; font-size: 7px; color: #999; text-align: center; }
+.week:nth-child(even) { color: #ddd; }
+.gm-c { flex: 1; position: relative; height: 16px; }
+.milestone { position: absolute; top: 2px; transform: translateX(-50%); text-align: center; }
+.milestone .diamond { display: block; font-size: 7px; color: #d63031; line-height: 1; }
+.milestone .mlbl { display: block; font-size: 6px; color: #999; white-space: nowrap; font-weight: 500; margin-top: -1px; }
+.phase-row { display: flex; align-items: stretch; margin-bottom: 1px; }
+.phase-label { width: 135px; min-width: 135px; font-size: 9px; font-weight: 600; color: #333; display: flex; align-items: center; padding-right: 6px; }
+.phase-label .tag { display: inline-block; font-size: 7px; font-weight: 700; border-radius: 2px; padding: 0 3px; margin-right: 4px; color: #fff; line-height: 14px; }
+.phase-track-wrap { flex: 1; min-width: 0; }
+.phase-track { position: relative; height: 20px; background: #f0f2f5; border-radius: 3px; overflow: hidden; }
+.seg { position: absolute; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 600; color: #fff; cursor: default; }
+.seg:hover { opacity: .85; z-index: 2; }
+.seg .s-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 1px; text-align: center; max-width: 100%; line-height: 1; pointer-events: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; padding-top: 4px; border-top: 1px solid #eee; font-size: 9px; color: #555; }
+.legend-item { display: flex; align-items: center; gap: 3px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.sub-section { margin-top: 8px; }
+.sub-section h2 { font-size: 10px; color: #444; margin-bottom: 2px; }
+.sub-table { width: 100%; border-collapse: collapse; font-size: 9px; }
+.sub-table th { background: #f8f9fb; color: #666; font-weight: 600; padding: 2px 5px; text-align: left; border-bottom: 1px solid #ccc; }
+.sub-table td { padding: 1px 5px; border-bottom: 1px solid #eee; color: #444; }
+.sub-table td:first-child { font-weight: 500; }
+.sub-badge { display: inline-block; font-size: 7px; font-weight: 700; color: #fff; border-radius: 2px; padding: 0 3px; line-height: 13px; }
+</style>
+</head>
+<body>
+
+<h1>FPGAプロトタイプ開発 ガントチャート</h1>
+<p class="subtitle">▼ マウスオーバーでサブタスク詳細</p>
+
+<div class="gantt-wrap">
+
+  <!-- Week header -->
+  <div class="gw">
+    <div class="sp"></div>
+    <div class="gw-c">
+      <div class="week">7/6</div><div class="week">7/13</div><div class="week">7/20</div><div class="week">7/27</div><div class="week">8/3</div><div class="week">8/10</div><div class="week">8/17</div><div class="week">8/24</div><div class="week">8/31</div><div class="week">9/7</div><div class="week">9/14</div><div class="week">9/21</div><div class="week">9/28</div><div class="week">10/5</div><div class="week">10/12</div><div class="week">10/19</div><div class="week">10/26</div><div class="week">11/2</div><div class="week">11/9</div><div class="week">11/16</div><div class="week">11/23</div><div class="week">11/30</div>
+    </div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="gm">
+    <div class="sp"></div>
+    <div class="gm-c">
+      <div class="milestone" style="left:22.73%"><span class="diamond">&#9670;</span><span class="mlbl">M1 設計完了</span></div>
+      <div class="milestone" style="left:45.45%"><span class="diamond">&#9670;</span><span class="mlbl">M2 RTL完了</span></div>
+      <div class="milestone" style="left:63.64%"><span class="diamond">&#9670;</span><span class="mlbl">M3 タイミング収束</span></div>
+      <div class="milestone" style="left:81.82%"><span class="diamond">&#9670;</span><span class="mlbl">M4 実機動作</span></div>
+      <div class="milestone" style="left:99.35%"><span class="diamond">&#9670;</span><span class="mlbl">M5 完了</span></div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#4a90d9">1</span>企画・要件定義</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:0.00%;width:7.79%;top:3px;background:#4990d9" title="7/6-7/17 要件定義・仕様書作成"><span class="s-label">要件定義</span></div>
+        <div class="seg" style="left:4.55%;width:7.79%;top:6px;background:#6ca3dc" title="7/13-7/24 アーキテクチャ設計"><span class="s-label">アーキ設計</span></div>
+        <div class="seg" style="left:9.09%;width:7.79%;top:3px;background:#8db6e1" title="7/20-7/31 コンポーネント選定"><span class="s-label">選定</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#38b25a">2</span>RTL設計・実装</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:9.09%;width:7.79%;top:3px;background:#38b25a" title="7/20-7/31 ブロック図・I/F設計"><span class="s-label">I/F設計</span></div>
+        <div class="seg" style="left:13.64%;width:21.43%;top:3px;background:#4dc26e" title="7/27-8/28 RTLコーディング"><span class="s-label">RTLコーディング</span></div>
+        <div class="seg" style="left:31.82%;width:12.34%;top:3px;background:#6dc986" title="8/24-9/11 単体シミュレーション"><span class="s-label">単体Sim</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#d9922e">3</span>論理合成・実装</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:31.82%;width:7.79%;top:3px;background:#d8912e" title="8/24-9/4 論理合成"><span class="s-label">合成</span></div>
+        <div class="seg" style="left:36.36%;width:7.79%;top:3px;background:#dba251" title="8/31-9/11 配置配線 (P&amp;R)"><span class="s-label">P&amp;R</span></div>
+        <div class="seg" style="left:40.91%;width:7.79%;top:3px;background:#dfb273" title="9/7-9/18 静的タイミング解析 (STA)"><span class="s-label">STA</span></div>
+        <div class="seg" style="left:45.45%;width:16.88%;top:3px;background:#e4c395" title="9/14-10/9 タイミング最適化"><span class="s-label">最適化</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#d95c5c">4</span>検証</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:40.91%;width:16.88%;top:3px;background:#d95b5b" title="9/7-10/2 結合シミュレーション"><span class="s-label">結合Sim</span></div>
+        <div class="seg" style="left:50.00%;width:12.34%;top:3px;background:#dd7d7d" title="9/21-10/9 ポストレイアウト検証"><span class="s-label">PostLayout</span></div>
+        <div class="seg" style="left:59.09%;width:12.34%;top:3px;background:#e39d9d" title="10/5-10/23 消費電力解析"><span class="s-label">電力解析</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#8a6ec7">5</span>実機評価</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:59.09%;width:7.79%;top:3px;background:#896ec7" title="10/5-10/16 ボード準備・環境構築"><span class="s-label">準備</span></div>
+        <div class="seg" style="left:63.64%;width:12.34%;top:3px;background:#a18ccf" title="10/12-10/30 実機動作確認"><span class="s-label">動作確認</span></div>
+        <div class="seg" style="left:72.73%;width:7.79%;top:3px;background:#b7a8d8" title="10/26-11/6 性能測定・評価"><span class="s-label">測定</span></div>
+        <div class="seg" style="left:72.73%;width:16.88%;top:6px;background:#cbc0e1" title="10/26-11/20 デバッグ・改修"><span class="s-label">デバッグ改修</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 6 -->
+  <div class="phase-row">
+    <div class="phase-label"><span class="tag" style="background:#4faec4">6</span>ドキュメント・納品</div>
+    <div class="phase-track-wrap">
+      <div class="phase-track">
+        <div class="seg" style="left:77.27%;width:12.34%;top:3px;background:#4fadc4" title="11/2-11/20 設計ドキュメント作成"><span class="s-label">設計Doc</span></div>
+        <div class="seg" style="left:86.36%;width:7.79%;top:3px;background:#6eb9ca" title="11/16-11/27 テストレポート作成"><span class="s-label">TestReport</span></div>
+        <div class="seg" style="left:90.91%;width:7.79%;top:3px;background:#8dc5d2" title="11/23-12/4 納品・引継ぎ"><span class="s-label">納品</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div>Phase1 企画</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#38b25a"></div>Phase2 RTL</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d9922e"></div>Phase3 合成</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d95c5c"></div>Phase4 検証</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8a6ec7"></div>Phase5 実機</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4faec4"></div>Phase6 Doc</div>
+    <div class="legend-item"><span style="color:#d63031;font-size:12px">&#9670;</span> マイルストーン</div>
+  </div>
+
+</div>
+
+<!-- Sub-task assignment table -->
+<div class="sub-section">
+<h2>サブタスク割り当て一覧</h2>
+<table class="sub-table">
+  <thead>
+    <tr><th style="width:20px">#</th><th style="width:140px">サブタスク</th><th style="width:80px">期間</th><th style="width:60px">工数</th><th>担当</th><th>成果物</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="sub-badge" style="background:#4990d9">1</span></td><td>要件定義・仕様書作成</td><td>7/6-7/17</td><td>10人日</td><td>FE, SE</td><td>要求仕様書</td></tr>
+    <tr><td><span class="sub-badge" style="background:#6ca3dc">1</span></td><td>アーキテクチャ設計</td><td>7/13-7/24</td><td>5人日</td><td>アーキテクト</td><td>アーキ設計書</td></tr>
+    <tr><td><span class="sub-badge" style="background:#8db6e1">1</span></td><td>コンポーネント選定</td><td>7/20-7/31</td><td>3人日</td><td>FE</td><td>選定レポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#38b25a">2</span></td><td>ブロック図・I/F設計</td><td>7/20-7/31</td><td>5人日</td><td>FE</td><td>ブロック図</td></tr>
+    <tr><td><span class="sub-badge" style="background:#4dc26e">2</span></td><td>RTLコーディング</td><td>7/27-8/28</td><td>20人日</td><td>FE ×2</td><td>RTLコード</td></tr>
+    <tr><td><span class="sub-badge" style="background:#6dc986">2</span></td><td>単体シミュレーション</td><td>8/24-9/11</td><td>10人日</td><td>FE, VE</td><td>Sim結果レポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#d8912e">3</span></td><td>論理合成</td><td>8/24-9/4</td><td>5人日</td><td>FE</td><td>合成結果</td></tr>
+    <tr><td><span class="sub-badge" style="background:#dba251">3</span></td><td>配置配線 (P&amp;R)</td><td>8/31-9/11</td><td>5人日</td><td>FE</td><td>配置配線結果</td></tr>
+    <tr><td><span class="sub-badge" style="background:#dfb273">3</span></td><td>静的タイミング解析 (STA)</td><td>9/7-9/18</td><td>5人日</td><td>FE</td><td>STAレポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#e4c395">3</span></td><td>タイミング最適化</td><td>9/14-10/9</td><td>10人日</td><td>FE</td><td>最適化結果</td></tr>
+    <tr><td><span class="sub-badge" style="background:#d95b5b">4</span></td><td>結合シミュレーション</td><td>9/7-10/2</td><td>12人日</td><td>VE</td><td>結合Sim結果</td></tr>
+    <tr><td><span class="sub-badge" style="background:#dd7d7d">4</span></td><td>ポストレイアウト検証</td><td>9/21-10/9</td><td>5人日</td><td>VE</td><td>PostLayout検証結果</td></tr>
+    <tr><td><span class="sub-badge" style="background:#e39d9d">4</span></td><td>消費電力解析</td><td>10/5-10/23</td><td>5人日</td><td>FE</td><td>電力レポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#896ec7">5</span></td><td>ボード準備・環境構築</td><td>10/5-10/16</td><td>3人日</td><td>HW</td><td>環境構築完了</td></tr>
+    <tr><td><span class="sub-badge" style="background:#a18ccf">5</span></td><td>実機動作確認</td><td>10/12-10/30</td><td>8人日</td><td>FE, HW</td><td>動作検証レポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#b7a8d8">5</span></td><td>性能測定・評価</td><td>10/26-11/6</td><td>5人日</td><td>FE</td><td>性能評価レポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#cbc0e1">5</span></td><td>デバッグ・改修</td><td>10/26-11/20</td><td>12人日</td><td>FE, VE</td><td>修正版コード</td></tr>
+    <tr><td><span class="sub-badge" style="background:#4fadc4">6</span></td><td>設計ドキュメント作成</td><td>11/2-11/20</td><td>8人日</td><td>FE</td><td>設計書</td></tr>
+    <tr><td><span class="sub-badge" style="background:#6eb9ca">6</span></td><td>テストレポート作成</td><td>11/16-11/27</td><td>5人日</td><td>VE</td><td>テストレポート</td></tr>
+    <tr><td><span class="sub-badge" style="background:#8dc5d2">6</span></td><td>納品・引継ぎ</td><td>11/23-12/4</td><td>3人日</td><td>PM</td><td>納品物一式</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- generated from YAML: start=2025-07-06 weeks=22 total_days=154 -->
+
+</body>
+</html>

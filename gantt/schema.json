@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Gantt YAML schema",
+  "type": "object",
+  "required": ["title", "start", "phases"],
+  "properties": {
+    "title": { "type": "string", "description": "ガント全体タイトル" },
+    "subtitle": { "type": "string", "default": "▼ マウスオーバーでサブタスク詳細" },
+    "start": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "開始日 YYYY-MM-DD" },
+    "weeks": { "type": "integer", "minimum": 1, "maximum": 104, "default": 22 },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "label"],
+        "properties": {
+          "at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "tasks"],
+        "properties": {
+          "name": { "type": "string" },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "基色のみ。濃淡は自動生成。省略時は既定パレット" },
+          "tasks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "start", "end"],
+              "properties": {
+                "name": { "type": "string" },
+                "short": { "type": "string", "description": "バー内短縮ラベル。省略時はname" },
+                "start": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                "end": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                "lane": { "oneOf": [{ "type": "integer", "enum": [0, 1] }, { "type": "string", "enum": ["auto"] }], "default": "auto" },
+                "detail": { "type": "string", "description": "ツールチップ用詳細。省略時はname" },
+                "effort": { "type": "string" },
+                "owner": { "type": "string" },
+                "deliverable": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
