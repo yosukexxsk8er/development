@@ -1,0 +1,383 @@
+# loadbike メンテナンス記録 (人が編集する正本)
+#
+# 運用: 日付順にイベントを追記するだけ。距離は activities/raw/*.csv から自動計算。
+#
+# Kind (集計の仕方):
+#   consumable ... モノ。installからretireまで距離が貯まる (タイヤ1本、チェーン等)
+#   service    ... 作業。service日が記録点。前回からの走行距離を出す (グリスアップ等)
+# Action (日付行の動詞):
+#   install ... 付ける (寿命開始)
+#   service ... 外さない整備 (脱脂・補充等。detailに内容)
+#   move    ... 位置移動。タイヤの前後ローテーション専用 (from/to)。距離・時間は個体に引継がれる
+#   replace ... 同位置で新品に交換 (= retire+installの省略形)
+#   retire  ... 外す・捨てる (寿命終了)
+#   memo    ... 作業なしの記録
+# 寿命目安 (任意。consumableのみ。超えたらレポートで警告):
+#   lifespan_km   ... 例: タイヤ 5000 (km)
+#   lifespan_days ... 例: シーラント 90 (日)。未設定可
+# 日付は YYYY-MM-DD で統一。
+bike:
+  name: loadbike
+  start_date: '2018-03-24'
+activities:
+  source_dir: activities/raw
+  merged: activities/merged.csv
+components:
+- id: tire_yksion_1
+  name: Yksion 1
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2019-09-28'
+    action: install
+    position: front
+  - date: '2021-01-10'
+    action: move
+    from: front
+    to: rear
+    memo: 前タイヤを後ろへローテーション
+  - date: '2021-09-25'
+    action: retire
+    position: rear
+    memo: 前タイヤを後ろへローテーション。天竜川でスローパンク発生後に交換(？)
+  spec: Yksion
+- id: tire_yksion_3
+  name: Yksion 3
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2021-01-10'
+    action: install
+    position: front
+  - date: '2021-04-11'
+    action: retire
+    position: front
+    memo: 縁石衝突パンク
+  spec: Yksion
+- id: tire_yksion_4
+  name: Yksion 4
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2021-10-08'
+    action: install
+    position: front
+  - date: '2022-09-18'
+    action: retire
+    position: front
+    memo: ビート劣化。茅野手前でパンク
+  spec: Yksion
+- id: tire_irc_1
+  name: IRC Tire 1
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2022-09-20'
+    action: install
+    position: front
+  - date: '2023-06-09'
+    action: retire
+    position: front
+    memo: 2023/04/26 パンク修理
+  spec: IRC
+- id: tire_vittoria_corsa_f
+  name: Vittoria Corsa
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2023-06-10'
+    action: install
+    position: front
+  - date: '2023-10-02'
+    action: retire
+    position: front
+    memo: パンク
+- id: tire_agilest_f
+  name: Agilest DURO TLR
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2023-10-07'
+    action: install
+    position: front
+  - date: '2024-12-05'
+    action: service
+  - date: '2025-12-05'
+    action: service
+  - date: '2026-02-15'
+    action: service
+- id: tire_yksion_2
+  name: Yksion 2
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2019-09-28'
+    action: install
+    position: rear
+  - date: '2021-01-10'
+    action: retire
+    position: rear
+  spec: Yksion
+- id: tire_yksion_5
+  name: Yksion 5
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2021-09-25'
+    action: install
+    position: rear
+  - date: '2022-08-10'
+    action: retire
+    position: rear
+- id: tire_yksion_6
+  name: Yksion 6
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2022-08-10'
+    action: install
+    position: rear
+  - date: '2023-04-28'
+    action: retire
+    position: rear
+  memo: GWの前の早めの交換。一度パンクした状態で走ったのでダメージあったし。
+- id: tire_vittoria_rubino_1
+  name: Vittoria ルビーノ
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2023-05-01'
+    action: install
+    position: rear
+  - date: '2023-05-01'
+    action: retire
+    position: rear
+    memo: ネジを踏んでパンク
+- id: tire_vittoria_rubino_2
+  name: Vittoria ルビーノ
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2023-05-02'
+    action: install
+    position: rear
+  - date: '2023-08-16'
+    action: retire
+    position: rear
+    memo: サイドの傷によるスローパンクが直らず
+- id: tire_agilest_r
+  name: Agilest DURO TLR
+  kind: consumable
+  lifespan_km: 5000
+  events:
+  - date: '2023-08-20'
+    action: install
+    position: rear
+  - date: '2024-03-14'
+    action: service
+  - date: '2024-11-27'
+    action: service
+  - date: '2025-07-13'
+    action: service
+  memo: 24年3月にドレッド剥がれ頻発
+- id: chain_1
+  name: チェーン1
+  kind: consumable
+  lifespan_km: 4000
+  events:
+  - date: '2018-08-24'
+    action: install
+  - date: '2021-09-24'
+    action: retire
+- id: chain_2
+  name: チェーン2
+  kind: consumable
+  lifespan_km: 4000
+  events:
+  - date: '2021-09-24'
+    action: install
+  - date: '2022-08-15'
+    action: service
+    detail: 脱脂
+  - date: '2023-02-01'
+    action: service
+    detail: 脱脂
+  - date: '2026-04-21'
+    action: service
+    detail: 脱脂
+    memo: 'TODO: 旧データではチェーン2のChangeDateだが旧EndDate(2023-03-31)より後。チェーン3の脱脂の誤記の可能性。要確認'
+  - date: '2023-03-31'
+    action: retire
+- id: chain_3
+  name: チェーン3
+  kind: consumable
+  lifespan_km: 4000
+  events:
+  - date: '2023-03-31'
+    action: install
+  - date: '2025-08-01'
+    action: retire
+- id: chain_4
+  name: チェーン4
+  kind: consumable
+  lifespan_km: 4000
+  events:
+  - date: '2025-08-01'
+    action: install
+- id: hub_grease
+  name: ハブ グリスアップ
+  kind: service
+  events:
+  - date: '2019-09-27'
+    action: install
+  - date: '2020-08-08'
+    action: service
+  - date: '2022-01-15'
+    action: service
+  - date: '2022-08-10'
+    action: service
+  - date: '2023-01-12'
+    action: service
+  - date: '2023-04-26'
+    action: service
+  - date: '2025-04-27'
+    action: service
+  - date: '2026-02-07'
+    action: service
+  spec: ID360
+  memo: グリス切れていた＠2023/04/26
+- id: sealant_front_replace
+  name: シーラント交換(前)
+  kind: service
+  events:
+  - date: '2020-07-12'
+    action: install
+  - date: '2021-01-10'
+    action: service
+- id: sealant_rear_replace
+  name: シーラント交換(後)
+  kind: service
+  events:
+  - date: '2020-07-12'
+    action: install
+  - date: '2021-01-10'
+    action: service
+  - date: '2022-08-13'
+    action: service
+  - date: '2023-02-01'
+    action: service
+- id: sealant_front_topup
+  name: シーラント補充(前)
+  kind: service
+  events:
+  - date: '2024-09-07'
+    action: install
+- id: sealant_rear_topup
+  name: シーラント補充(後)
+  kind: service
+  events:
+  - date: '2024-09-07'
+    action: install
+- id: shifter_wire_front
+  name: シフトワイヤー(前) 交換
+  kind: service
+  events:
+  - date: '2020-05-10'
+    action: install
+  - date: '2024-04-27'
+    action: service
+- id: shifter_wire_rear
+  name: シフトワイヤー(後) 交換
+  kind: service
+  events:
+  - date: '2020-05-10'
+    action: install
+  - date: '2021-09-19'
+    action: service
+  - date: '2023-01-07'
+    action: service
+  - date: '2023-11-25'
+    action: service
+  - date: '2025-03-20'
+    action: service
+  - date: '2026-05-02'
+    action: service
+  memo: 23/2/1は履歴から削除。23/1/7断線＠多摩湖、23/12/01~Optisilick, 25/03/20~Normal
+- id: shifter_housing
+  name: シフトアウターケーブル交換
+  kind: service
+  events:
+  - date: '2020-05-10'
+    action: install
+- id: brake_wire_front
+  name: ブレーキワイヤー前 交換
+  kind: service
+  events:
+  - date: '2020-05-10'
+    action: install
+  - date: '2023-02-01'
+    action: service
+- id: brake_wire_rear
+  name: ブレーキワイヤー後 交換
+  kind: service
+  events:
+  - date: '2020-05-10'
+    action: install
+- id: brake_housing
+  name: ブレーキアウター
+  kind: service
+  events:
+  - date: '2020-05-10'
+    action: install
+- id: brake_shoe_front
+  name: ブレーキシュー（前）
+  kind: consumable
+  lifespan_km: 3000
+  events:
+  - date: '2018-03-24'
+    action: install
+  - date: '2020-01-01'
+    action: service
+  - date: '2023-08-22'
+    action: service
+- id: brake_shoe_rear
+  name: ブレーキシュー（後）
+  kind: consumable
+  lifespan_km: 3000
+  events:
+  - date: '2018-03-24'
+    action: install
+  - date: '2020-01-01'
+    action: service
+  - date: '2023-08-22'
+    action: service
+- id: crank
+  name: クランクシャフト
+  kind: service
+  events:
+  - date: '2022-08-12'
+    action: install
+  detail: グリスアップ
+- id: rear_light
+  name: リアライト
+  kind: service
+  events:
+  - date: '2020-08-23'
+    action: install
+  spec: CatEye(Auto)
+  detail: 電池交換
+- id: garmin_sensor
+  name: ガーミンセンサー
+  kind: service
+  events:
+  - date: '2020-08-23'
+    action: install
+  detail: 電池交換
+  position: 速度
+- id: tile
+  name: タイル
+  kind: service
+  events:
+  - date: '2023-03-21'
+    action: install
+  detail: 電池交換

@@ -22,8 +22,6 @@ main_map_gpx.bin
 map_*.html
 mapping_activities_loadbike/map.html
 test.*
-AAA.csv
-Book*.csv
 core_usb_host-*.zip
 pdf_w_PyMuPDF_debug.log
 pdf_w_PyMuPDF_dump.json
@@ -50,7 +48,6 @@ external_git/
 gomi/
 merged/
 logs/
-s-para/
 
 # Ignore entire directories that seem to be separate tools/trials
 Configuration/
@@ -65,22 +62,16 @@ Webアプリ/
 backward/
 chrome_addin/
 clipboard_file_backup/
-cmake_trial/
-core_usb_host/
 data_frame_training/
 df_excel_test/
 excel_arrange_table/
 excel_port_list/
-gcc_trical/
-get_hw_info/
 ipxact/
 json_file
 lib/
 list2html.py
-loadbike/excel_to_json.py
 mapping_activities_loadbike/make_map.py
 merge_nicos_bills/
-mingw_env_setup_check/
 modify_link_in_shortcut/
 outlook/
 rename.py
@@ -93,9 +84,8 @@ weather/*
 !weather/data/places.json
 weeklyreport_to_json.py
 weight_graph/
-winbond_spi_flash_w25q/
 エクセルから取り込み/
-ファイル保存/
+ファイル保孁E
 不動産/
 
 # remove_mosaic (DeepMosaics)
@@ -111,7 +101,9 @@ remove_mosaic/DeepMosaics/pretrained_models/lama/
 !conbination/conditions.xlsx
 !gui_checkbox_in_table.py
 !loadbike/maintenance_note.json
+!loadbike/maintenance.yaml
 !loadbike/merge_activities.py
+!loadbike/activities/raw/*.csv
 !mapping_activities_loadbike/main_map_gpx.py
 !memo.py
 !mymisc.py
@@ -199,3 +191,21 @@ remove_mosaic/DeepMosaics/util/filt.py
 remove_mosaic/DeepMosaics/util/image_processing.py
 remove_mosaic/DeepMosaics/util/mosaic.py
 remove_mosaic/DeepMosaics/util/util.py
+
+# Declutter staging
+_trash_*/
+
+# Embedded generated artifacts
+*.exe
+*.dll
+*.png
+*.s2p
+*.s4p
+*.s24p
+CMakeFiles/
+CMakeCache.txt
+*.vcxproj
+*.vcxproj.filters
+*.sln
+cmake_install.cmake
+

@@ -1,64 +1,106 @@
-import json
+"""Garmin Activities CSV のマージ処理.
+
+使い方:
+    python merge_activities.py  # activities/raw/*.csv -> activities/merged.csv
+
+仕様:
+- 入力は activities/raw/ に置くだけ (ファイル名・個数は問わない)。
+- 列は名前で特定 (アクティビティタイプ,日付,お気に入り,タイトル,距離) の5列のみ使用。
+  Book1.csv のような5列版も、フル版も混在可。ヘッダのみのファイルは無視。
+- 日付は YYYY-MM-DD HH:MM:SS / YYYY/M/D H:MM 等を混在許容で解釈。
+- 距離のカンマ・'--' を吸収。距離なし行は除外。
+- 重複除去: 完全重複 + (タイトル・距離が同じで2分以内は重複とみなす)。
+"""
+import sys
+from pathlib import Path
+
 import pandas as pd
 
+BASE = Path(__file__).resolve().parent
+RAW_DIR = BASE / "activities" / "raw"
+MERGED = BASE / "activities" / "merged.csv"
+
+COL_TYPE = "アクティビティタイプ"
+COL_DATE = "日付"
+COL_FAV = "お気に入り"
+COL_TITLE = "タイトル"
+COL_DIST = "距離"
+KEEP = [COL_TYPE, COL_DATE, COL_FAV, COL_TITLE, COL_DIST]
+# Garminエクスポートは時期により英語ヘッダが混ざる (日付・タイトルは日本語のまま)
+ALIASES = {"Activity Type": COL_TYPE, "Favorite": COL_FAV, "Distance": COL_DIST}
 
 
-def merge_activities(files,dir="./", save_name=None):
-    dfs = []
-    col_from = "アクティビティタイプ"
-    col_to   = "距離"
-    col_date = "日付"
-    col_title = "タイトル"
-    col_dist = "距離"
-    for file in files:
-        print(f'Read {dir}{file}, and merging....')
-        dfs.append(pd.read_csv(dir + file))
-    df = pd.concat(dfs)
-    df = df.loc[:,f"{col_from}":f"{col_to}"]
-    df = df.drop_duplicates().sort_values(by=f"{col_date}",ascending=False)
-
-    # 日付をdatetime型に変換
-    df[col_date] = pd.to_datetime(df[col_date])
-
-    # 2分以内かつタイトル・距離が同じものを重複とみなして削除
-    df = df.sort_values(by=[col_title, col_dist, col_date])
-    mask = [True]  # 最初の行は残す
-    for i in range(1, len(df)):
-        prev = df.iloc[i-1]
-        curr = df.iloc[i]
-        # タイトル・距離が同じ、かつ日付が2分以内なら重複
-        if (curr[col_title] == prev[col_title]) and (curr[col_dist] == prev[col_dist]):
-            diff = abs((curr[col_date] - prev[col_date]).total_seconds())
-            if diff <= 120:
-                mask.append(False)
-                continue
-        mask.append(True)
-    df = df[mask]
-
-    df = df.sort_values(by=f"{col_date}",ascending=False)
-    if(save_name):
-        df.to_csv(save_name,index=False)
-        print(f'{save_name} was saved since file name as save was not specified.')
+def _read_one(path):
+    for enc in ("utf-8-sig", "cp932"):
+        try:
+            df = pd.read_csv(path, encoding=enc)
+            break
+        except UnicodeDecodeError:
+            continue
     else:
-        print(f'Merged Dataframe was not saved as csv.')
+        print(f"skip (decode error): {path.name}", file=sys.stderr)
+        return None
+    df = df.rename(columns=ALIASES)
+    missing = [c for c in KEEP if c not in df.columns]
+    if missing:
+        print(f"skip (columns missing {missing}): {path.name}", file=sys.stderr)
+        return None
+    df = df.loc[:, KEEP].copy()
+    df["__src"] = path.name
+    return df
+
+
+def _parse_distance(s):
+    if isinstance(s, (int, float)):
+        return float(s)
+    s = str(s).replace(",", "").strip()
+    if s in ("", "--", "nan", "None"):
+        return float("nan")
+    try:
+        return float(s)
+    except ValueError:
+        return float("nan")
+
+
+def merge_activities(source_dir=RAW_DIR, save_name=MERGED):
+    source_dir = Path(source_dir)
+    files = sorted(source_dir.glob("*.csv"))
+    if not files:
+        raise FileNotFoundError(f"no csv in {source_dir}")
+    dfs = []
+    for path in files:
+        print(f"Read {path.name} ...")
+        df = _read_one(path)
+        if df is not None and len(df):
+            dfs.append(df)
+    df = pd.concat(dfs, ignore_index=True)
+    df[COL_DATE] = pd.to_datetime(df[COL_DATE], format="mixed", errors="coerce")
+    df[COL_DIST] = df[COL_DIST].map(_parse_distance)
+    df = df.dropna(subset=[COL_DATE, COL_DIST]).reset_index(drop=True)
+    df = df.drop_duplicates(subset=[COL_DATE, COL_TITLE, COL_DIST])
+
+    # タイトル・距離が同じで2分以内は重複とみなす
+    df = df.sort_values(by=[COL_TITLE, COL_DIST, COL_DATE]).reset_index(drop=True)
+    keep = [True] * len(df)
+    for i in range(1, len(df)):
+        prev, curr = df.iloc[i - 1], df.iloc[i]
+        if curr[COL_TITLE] == prev[COL_TITLE] and curr[COL_DIST] == prev[COL_DIST]:
+            if abs((curr[COL_DATE] - prev[COL_DATE]).total_seconds()) <= 120:
+                keep[i] = False
+    df = df[keep]
+
+    df = df.sort_values(by=COL_DATE, ascending=False).reset_index(drop=True)
+    df[COL_DATE] = df[COL_DATE].dt.strftime("%Y-%m-%d %H:%M:%S")
+    if save_name:
+        save_name = Path(save_name)
+        save_name.parent.mkdir(parents=True, exist_ok=True)
+        df.drop(columns=["__src"]).to_csv(save_name, index=False)
+        print(f"saved {save_name} ({len(df)} rows)")
     return df
 
 
 def main():
-    json_file="maintenance_note.json"
-    with open(json_file, "r", encoding="utf-8_sig") as f:
-        json_dict = json.load(f)
-    
-    files = json_dict["Activities"]
-    #files.append("Book1.csv")
-    #files.append("Book2.csv")
-    #files.append("Activities (12).csv")
-    #files.append("Activities (13).csv")
-    df = merge_activities(files,"AAA.csv")
-    print(df)
-
-    pass
-
+    merge_activities()
 
 
 if __name__ == "__main__":
